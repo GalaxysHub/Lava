@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import Search from './Search';
 
 import PersonIcon from '@mui/icons-material/Person';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import OpacityIcon from '@mui/icons-material/Opacity';
@@ -39,6 +40,11 @@ export default function Header() {
             Accounts
           </NavLink>
 
+          <NavLink to="contracts/">
+            <AccountTreeIcon fontSize="medium" />
+            Contracts
+          </NavLink>
+
           <NavLink to="blocks/">
             <WidgetsOutlinedIcon fontSize="medium" />
             Blocks
@@ -49,14 +55,14 @@ export default function Header() {
             Transactions
           </NavLink>
 
-          <NavLink to="faucet/">
-            <OpacityIcon fontSize="medium"/>
-            Faucet
-          </NavLink>
-
           <NavLink to="logs/">
             <TerminalIcon fontSize="medium"/>
             Logs
+          </NavLink>
+
+          <NavLink to="faucet/">
+            <OpacityIcon fontSize="medium"/>
+            Faucet
           </NavLink>
 
           <NavLink to="wallet/">
