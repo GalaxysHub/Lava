@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { forage } from '@tauri-apps/tauri-forage';
+import { getVersion } from '@tauri-apps/api/app';
 import { generateKeypairs } from '../utils/helper';
 import { Keypair } from "@solana/web3.js";
 import { createTheme, Theme, ThemeProvider } from '@mui/material';
@@ -23,11 +24,10 @@ type Props = {
 };
 export const AppProvider: React.FC<Props> = ({ children }) => {
 
-  
-
   const [accounts, setAccounts] = useState<Keypair[]>();
   const [mode, setMode] = useState<'light' | 'dark'>('light');
   const [isLoading, setIsLoading] = useState(false);
+  const [appVersion, setAppVersion] = useState<string>();
 
   const theme = createTheme({
     components: {
@@ -118,6 +118,7 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
   };
 
   useEffect(() => {
+    getVersion().then(setAppVersion);
     getModeFromStorage();
   }, []);
 
@@ -130,6 +131,7 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
 
   const memoizedValue = useMemo(
     () => ({
+      appVersion,
       theme,
       mode,
       isLoading,
