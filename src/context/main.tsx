@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { forage } from '@tauri-apps/tauri-forage';
 import { getVersion } from '@tauri-apps/api/app';
 import { generateKeypairs } from '../utils/helper';
-import { TAccounts } from '../libs/types';
+import { TAccounts, TSettings } from '../libs/types';
 import { createTheme, Theme, ThemeProvider } from '@mui/material';
 
 export type TAppContext = {
@@ -10,6 +10,7 @@ export type TAppContext = {
   mode: 'light' | 'dark';
   appVersion?: string;
   accounts?: TAccounts[];
+  settings: TSettings;
   isLoading: boolean;
   handleSwitchMode: () => void;
   setIsLoading: (isLoading: boolean) => void;
@@ -28,6 +29,11 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
   const [mode, setMode] = useState<'light' | 'dark'>('light');
   const [isLoading, setIsLoading] = useState(false);
   const [appVersion, setAppVersion] = useState<string>();
+  const [settings, setSettings] = useState<TSettings>({
+    validatorHostame: "127.0.0.1",
+    vaidatorPort: 8899,
+    keysCount: 10,
+  })
 
   const theme = createTheme({
     components: {
@@ -134,6 +140,8 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
       appVersion,
       theme,
       mode,
+      settings,
+      setSettings,
       isLoading,
       setIsLoading,
       accounts,
