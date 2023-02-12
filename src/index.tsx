@@ -7,6 +7,7 @@ import {
 import './index.css';
 import App from './App';
 import AccountListPage from './pages/accounts/AccountsListPage';
+import ContractListPage from './pages/contracts/ContractListPage';
 import BlockDetailsPage from './pages/blocks/BlockDetailsPage';
 import BlockListPage  from './pages/blocks/BlockListPage';
 import TransactionListPage from './pages/transactions/TransactionListPage';
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "accounts/",
         element: <AccountListPage />,
+      },
+      {
+        path: "contracts/",
+        element: <ContractListPage />,
       },
       {
         path: "blocks/",
