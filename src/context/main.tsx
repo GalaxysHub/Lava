@@ -2,14 +2,14 @@ import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { forage } from '@tauri-apps/tauri-forage';
 import { getVersion } from '@tauri-apps/api/app';
 import { generateKeypairs } from '../utils/helper';
-import { Keypair } from "@solana/web3.js";
+import { TAccounts } from '../libs/types';
 import { createTheme, Theme, ThemeProvider } from '@mui/material';
 
 export type TAppContext = {
   theme: Theme;
   mode: 'light' | 'dark';
   appVersion?: string;
-  accounts?: Keypair[];
+  accounts?: TAccounts[];
   isLoading: boolean;
   handleSwitchMode: () => void;
   setIsLoading: (isLoading: boolean) => void;
@@ -24,7 +24,7 @@ type Props = {
 };
 export const AppProvider: React.FC<Props> = ({ children }) => {
 
-  const [accounts, setAccounts] = useState<Keypair[]>();
+  const [accounts, setAccounts] = useState<TAccounts[]>();
   const [mode, setMode] = useState<'light' | 'dark'>('light');
   const [isLoading, setIsLoading] = useState(false);
   const [appVersion, setAppVersion] = useState<string>();
