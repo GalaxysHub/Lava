@@ -17,11 +17,9 @@ import SettingsPage from './pages/settings/SettingsPage';
 import FaucetPage from './pages/faucet/FaucetPage';
 import WalletPage from './pages/wallet/WalletPage';
 import ErrorPage from './pages/ErrorPage';
-import StartPage from './pages/StartPage';
+import StartPage from './pages/start/StartPage';
 import { AppProvider } from './context/main';
 import reportWebVitals from './reportWebVitals';
-import { createTheme } from '@mui/material';
-
 
 
 const router = createBrowserRouter([
