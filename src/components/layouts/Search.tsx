@@ -45,8 +45,8 @@ export default function Search() {
     navigate(`/${path}/${data}${location.search}`, { replace: true });
   };
 
-  const handleSearchSubmit = () => {
-
+  const handleSearchSubmit = (event:React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     // TO_DO
     
   }
