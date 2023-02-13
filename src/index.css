@@ -16,6 +16,13 @@ a {
   text-decoration: none;
 }
 
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
 #menu {
   padding: 15px;
   background-color: #333;
@@ -77,5 +84,56 @@ a {
 }
 
 #main {
+  margin-top: 100px;
+  margin-bottom: 20px;
   padding: 5px 15px;
+}
+
+#main svg {
+  opacity: 0.8;
+}
+
+#main svg:hover {
+  opacity: 1;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 4px 15px;
+  background-color: #333;
+  font-size: 0.8rem;
+  /* text-transform: uppercase; */
+ 
+}
+
+.key-item svg:last-child {
+  display: none;
+  transition: all, 0.3s;
+}
+
+.key-item:hover svg:last-child {
+  display: inline-flex;
+  transition: all, 0.3s;
+}
+
+.key-item > div > div:first-child {
+  opacity: 0.6;
+}
+
+.key-item > div > div.active {
+  opacity: 1;
+}
+
+.key-item .edit-btn {
+  opacity: 0.6;
+}
+
+.key-item .edit-btn:hover  {
+  opacity: 1;
+}
+
+#status-message {
+  transition: all 0.3s;
 }
