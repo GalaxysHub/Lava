@@ -1,16 +1,17 @@
 import { Keypair } from "@solana/web3.js";
-import { TAccounts } from "../libs/types";
+import { TAccount } from "../libs/types";
 
 /**
  * 
  * @param n - number of keypairs to generate
- * @returns Array<TAccounts>
+ * @returns Array<TAccount>
  */
-export  const generateKeypairs = (n: number): Array<TAccounts> => {
-  let keys: Array<TAccounts> = []
+export  const generateKeypairs = (n: number): Array<TAccount> => {
+  let keys: Array<TAccount> = []
   for (let i = 0; i < n; i++) {
     const keypair = Keypair.generate();
-    keys.push({alias:"", keypair:keypair})
+    // keys.push({alias:`Account ${i+1}`, keypair:keypair})
+    keys.push({index: i+1, alias:"", keypair:keypair})
   }
   return keys
 }
