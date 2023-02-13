@@ -1,28 +1,27 @@
 import React, {useContext} from 'react';
 import Header from './components/layouts/Header';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import Footer from './components/layouts/Footer';
 import { AppContext } from './context/main';
-import StartPage from './pages/StartPage';
 
 export default function App()  {
 
   const {accounts} = useContext(AppContext)
   // console.log(accounts);
 
+  const navigate = useNavigate();
+
+  if (!accounts || accounts?.length === 0) {
+    navigate('/start/');
+  }
 
   return (
     <>
-      {!accounts 
-      ?
-        <StartPage />
-      :
-        <>
-          <Header />
-          <div id="main">
-              <Outlet />
-          </div>
-        </>  
-      }
+      <Header />
+      <div id="main">
+          <Outlet />
+      </div>
+      <Footer />
     </> 
   );
 }
