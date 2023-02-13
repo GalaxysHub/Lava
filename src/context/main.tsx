@@ -1,20 +1,20 @@
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { forage } from '@tauri-apps/tauri-forage';
 import { getVersion } from '@tauri-apps/api/app';
-import { generateKeypairs } from '../utils/helper';
-import { TAccounts, TSettings } from '../libs/types';
+import { TAccount, TSettings } from '../libs/types';
 import { createTheme, Theme, ThemeProvider } from '@mui/material';
 
 export type TAppContext = {
   theme: Theme;
   mode: 'light' | 'dark';
   appVersion?: string;
-  accounts?: TAccounts[];
+  accounts?: TAccount[];
   settings: TSettings;
   isLoading: boolean;
   handleSwitchMode: () => void;
   setIsLoading: (isLoading: boolean) => void;
-  collectAccounts: (n: number) => void;
+  setAccounts: (accounts: TAccount[]) => void;
+  setSettings: (settings: TSettings) => void;
 };
 
 export const AppContext = createContext({} as TAppContext);
@@ -25,7 +25,7 @@ type Props = {
 };
 export const AppProvider: React.FC<Props> = ({ children }) => {
 
-  const [accounts, setAccounts] = useState<TAccounts[]>();
+  const [accounts, setAccounts] = useState<TAccount[]>();
   const [mode, setMode] = useState<'light' | 'dark'>('light');
   const [isLoading, setIsLoading] = useState(false);
   const [appVersion, setAppVersion] = useState<string>();
@@ -111,11 +111,6 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
     }
   };
 
-  const collectAccounts = (n: number) => {
-    const accounts = generateKeypairs(n);
-    setAccounts(accounts);
-  };
-
   const setModeInStorage = async (newMode: 'light' | 'dark') => {
     await forage.setItem({
       key: 'lava-mode',
@@ -145,7 +140,7 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
       isLoading,
       setIsLoading,
       accounts,
-      collectAccounts,
+      setAccounts,
       handleSwitchMode,
     }),
     [
