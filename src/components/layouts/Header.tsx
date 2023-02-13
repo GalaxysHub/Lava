@@ -13,7 +13,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import TerminalIcon from '@mui/icons-material/Terminal';
 import ReplayIcon from '@mui/icons-material/Replay';
 import Grid from '@mui/material/Grid';
-import { Stack } from '@mui/material';
+import { Stack, Tooltip } from '@mui/material';
 
 export default function Header() {
 
@@ -93,10 +93,15 @@ export default function Header() {
             spacing={2}
             >
             <NavLink to="start/">
-              <ReplayIcon fontSize="medium" />
+              <Tooltip title="Start Page" arrow placement="bottom" >
+                <ReplayIcon fontSize="medium" />
+              </Tooltip>
             </NavLink>
+
             <NavLink to="settings/">
-              <SettingsIcon fontSize="medium" />
+              <Tooltip title="Settings Page" arrow placement="bottom" >
+                <SettingsIcon fontSize="medium" />
+              </Tooltip>
             </NavLink>
             </Stack>
           </Grid>
