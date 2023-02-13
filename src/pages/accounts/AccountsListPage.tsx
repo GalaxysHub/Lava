@@ -6,12 +6,14 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import QrCode2Icon from '@mui/icons-material/QrCode2';
+import QrCodeIcon from '@mui/icons-material/QrCode';
 import KeyIcon from '@mui/icons-material/Key';
-import { CopyToClipboard } from "../../components/helpers/CopyToClipBoard";
+import KeyItem from "./KeyItem";
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import OpacityIcon from '@mui/icons-material/Opacity';
 import { QRCodeSVG } from 'qrcode.react';
 import { AppContext } from "../../context/main";
-import { Box, Dialog, DialogContent, Stack } from "@mui/material";
+import { Box, Dialog, DialogContent, Stack, Tooltip } from "@mui/material";
 
 
 export interface SimpleDialogProps {
@@ -32,7 +34,7 @@ export default function AccountListPage() {
     setDialogOpen(true);
   }
 
-  // QR-Code Dialog
+  // Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleDialogClose = () => {
       setDialogOpen(false);
@@ -46,6 +48,14 @@ export default function AccountListPage() {
     setQrcode(value.publicKey.toString());
     setDialogOpen(true);
   };
+
+  const swapToWallet = (event: React.MouseEvent<SVGSVGElement>, value: Keypair) => {
+    console.log(value.publicKey)
+  }
+
+  const addFunds = (event: React.MouseEvent<SVGSVGElement>, value: Keypair) => {
+    console.log(value.publicKey)
+  }
 
   return (
     <>
@@ -66,13 +76,13 @@ export default function AccountListPage() {
             </TableHead>
             <TableBody>
               {accounts.map((item, index) => (
-                <TableRow hover key={item.publicKey.toString()}>
+                <TableRow hover key={item.keypair.publicKey.toString()} sx={{height:"80px"}}>
                   <TableCell align="center">
                     {index + 1}
                   </TableCell>
 
-                  <TableCell align="left">
-                    {item.publicKey.toString()}
+                  <TableCell align="left" className="key-item">
+                    <KeyItem {...item}/>
                   </TableCell>
 
                   <TableCell align="center">
@@ -81,9 +91,22 @@ export default function AccountListPage() {
                       justifyContent="center"
                       spacing={2}
                     >
-                      <CopyToClipboard textToCopy={item.publicKey.toString()} notification='snackbar' />
-                      <QrCode2Icon onClick={(event) => handleQRClick(event, item)} fontSize="small" sx={{cursor:"pointer" }} />
-                      <KeyIcon onClick={(event) => showPrivateData(event, item)} fontSize="small" sx={{ cursor:"pointer" }} />
+                      <Tooltip title="Add funds" arrow placement="top" >
+                        <OpacityIcon onClick={(event) => addFunds(event, item.keypair)} fontSize="small" sx={{ cursor:"pointer" }} />
+                      </Tooltip>
+
+                      <Tooltip title="Swap to Wallet" arrow placement="top" >
+                        <AccountBalanceWalletIcon onClick={(event) => swapToWallet(event, item.keypair)} fontSize="small" sx={{ cursor:"pointer" }} />
+                      </Tooltip>
+                      
+                      <Tooltip title="Show QR" arrow placement="top" >
+                        <QrCodeIcon onClick={(event) => handleQRClick(event, item.keypair)} fontSize="small" sx={{cursor:"pointer" }} />
+                      </Tooltip>
+
+                      <Tooltip title="Show Private key" arrow placement="top" >
+                        <KeyIcon onClick={(event) => showPrivateData(event, item.keypair)} fontSize="small" sx={{ cursor:"pointer" }} />
+                      </Tooltip>
+                   
                     </Stack>
                   </TableCell>
 
@@ -95,8 +118,6 @@ export default function AccountListPage() {
                   <TableCell align="center">
                     0
                   </TableCell>
-
-
 
                 </TableRow>
               ))}
