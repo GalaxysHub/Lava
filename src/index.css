@@ -23,6 +23,96 @@ header {
   z-index: 999;
 }
 
+#top {
+  position: fixed;
+  top: 0;
+  padding: 5px 15px 5px 5px;
+  width: 100%;
+  /* background-color: #333; */
+  color: #eee;
+  font-size: 0.9rem;
+  z-index: 1000;
+}
+
+
+
+#top .top-left div {
+  margin-left: 15px;
+  text-align: right;
+  cursor: default;
+}
+
+#top .top-left div span:first-child {
+  text-transform: uppercase;
+  font-size: 0.6rem;
+  opacity: 0.7;
+}
+
+#top .top-left div span:last-child {
+  display: block;
+  margin-top: -7px;
+  font-size: 0.8rem;
+}
+
+#top .logo {
+  padding-left: 10px;
+  text-transform: uppercase;
+}
+
+#top .logo a {
+  color: #fff;
+}
+
+#top .logo span {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+#top .logo sup {
+  position: fixed;
+  margin-top: 5px;
+  margin-left: -2px;
+  font-size: 0.5rem;
+  text-transform: uppercase;
+}
+
+
+
+aside {
+  display: flex;
+  flex-direction: column;
+  -moz-box-pack: justify;
+  justify-content: space-between;
+  position: fixed;
+  left: 0;
+  height: 100vh;
+  padding: 60px 0 10px 0;
+  background-color: #333;
+  width: 60px;
+}
+
+aside > div:last-child {
+  margin-bottom: 50px;
+}
+
+aside .side-menu-item {
+  padding: 10px 0;
+  text-align: center;
+}
+
+/* aside .side-menu-item:hover {
+  border-left: 3px solid green;
+} */
+
+aside a {
+  color: #ccc;
+  transition:  all 0.3s;
+}
+
+aside a:hover {
+  color: #64bdac;
+}
+
 #menu {
   padding: 15px;
   background-color: #333;
@@ -41,13 +131,18 @@ header {
   color: #64bdac;
 }
 
+#search {
+  width: 100%;
+}
+
 #search input {
-  width: 90%;
+  width: 100%;
   padding: 0 15px;
-  background-color: #333;
+  /* background-color: #333; */
+  background: transparent;
   height: 35px;
   border-radius: 16px;
-  border: 1px solid #666;
+  border: 1px solid #ccc;
   transition: all 0.3s;
 }
 
@@ -57,6 +152,15 @@ header {
   outline: none;
   color: #ccc;
 }
+
+#search input::-webkit-input-placeholder       {opacity: 1; transition: opacity 0.3s ease; color: #eee;}
+#search input::-moz-placeholder                {opacity: 1; transition: opacity 0.3s ease; color: #eee;}
+#search input:-moz-placeholder                 {opacity: 1; transition: opacity 0.3s ease; color: #eee;}
+#search input:-ms-input-placeholder            {opacity: 1; transition: opacity 0.3s ease; color: #eee;}
+#search input:focus::-webkit-input-placeholder {opacity: 0; transition: opacity 0.3s ease; color: #eee;}
+#search input:focus::-moz-placeholder          {opacity: 0; transition: opacity 0.3s ease; color: #eee;}
+#search input:focus:-moz-placeholder           {opacity: 0; transition: opacity 0.3s ease; color: #eee;}
+#search input:focus:-ms-input-placeholder      {opacity: 0; transition: opacity 0.3s ease; color: #eee;}
 
 #submenu {
   padding: 5px 20px;
@@ -84,9 +188,11 @@ header {
 }
 
 #main {
-  margin-top: 100px;
+  margin-top: 48px;
+  margin-left: 60px;
   margin-bottom: 20px;
   padding: 5px 15px;
+  height: 90vh;
 }
 
 #main svg {
@@ -102,10 +208,20 @@ footer {
   bottom: 0;
   width: 100%;
   padding: 4px 15px;
-  background-color: #333;
+  background-color: #222;
   font-size: 0.8rem;
   /* text-transform: uppercase; */
- 
+  z-index: 1000;
+}
+
+footer span {
+  opacity: 0.8;
+  cursor: default;
+}
+
+footer span:hover {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .key-item svg:last-child {
@@ -136,4 +252,10 @@ footer {
 
 #status-message {
   transition: all 0.3s;
+}
+
+
+.tab-button-group {
+  position: fixed;
+  bottom: 45px;
 }

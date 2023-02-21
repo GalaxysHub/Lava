@@ -93,7 +93,7 @@ export default function Header() {
             spacing={2}
             >
             <NavLink to="start/">
-              <Tooltip title="Start Page" arrow placement="bottom" >
+              <Tooltip title="Settings Page" arrow placement="bottom" >
                 <ReplayIcon fontSize="medium" />
               </Tooltip>
             </NavLink>

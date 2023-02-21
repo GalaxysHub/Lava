@@ -7,11 +7,9 @@ import {
 import './index.css';
 import App from './App';
 import AccountListPage from './pages/accounts/AccountsListPage';
-import ContractListPage from './pages/contracts/ContractListPage';
-import BlockDetailsPage from './pages/blocks/BlockDetailsPage';
-import BlockListPage  from './pages/blocks/BlockListPage';
-import TransactionListPage from './pages/transactions/TransactionListPage';
-import TransactionDetailsPage from './pages/transactions/TransactionDetailsPage';
+import ProgramListPage from './pages/programs/ProgramListPage';
+import BlockDetailsPage from './pages/explorer/BlockDetailsPage';
+import TransactionDetailsPage from './pages/explorer/TransactionDetailsPage';
 import LogPage from './pages/log/LogPage';
 import SettingsPage from './pages/settings/SettingsPage';
 import FaucetPage from './pages/faucet/FaucetPage';
@@ -20,6 +18,7 @@ import ErrorPage from './pages/ErrorPage';
 import StartPage from './pages/start/StartPage';
 import { AppProvider } from './context/main';
 import reportWebVitals from './reportWebVitals';
+import ExplorerPage from './pages/explorer/ExplorerPage';
 
 
 const router = createBrowserRouter([
@@ -38,25 +37,35 @@ const router = createBrowserRouter([
         element: <AccountListPage />,
       },
       {
-        path: "contracts/",
-        element: <ContractListPage />,
+        path: "programs/",
+        element: <ProgramListPage />,
       },
       {
-        path: "blocks/",
-        element: <BlockListPage />,
-      },
-      {
-        path: "blocks/:blockId",
-        element: <BlockDetailsPage />,
-      },
-      {
-        path: "txs/",
-        element: <TransactionListPage />,
-      },
-      {
-        path: "txs/:txId",
-        element: <TransactionDetailsPage />,
-      },
+        path: "explorer/",
+        element: <ExplorerPage />,
+        children: [
+          {
+            path: "blocks/",
+            element: <ExplorerPage />,
+            children: [
+              {
+                path: ":blockId/",
+                element: <BlockDetailsPage />,
+              }
+            ]
+          },
+          {
+            path: "txs/",
+            element: <ExplorerPage />,
+            children: [
+              {
+                path: ":blockId/",
+                element: <TransactionDetailsPage />,
+              }
+            ]
+          },
+        ]
+      }, 
       {
         path: "faucet/",
         element: <FaucetPage />,

@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
 import Header from './components/layouts/Header';
+import Nav from './components/layouts/Nav';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Footer from './components/layouts/Footer';
 import { AppContext } from './context/main';
@@ -17,7 +18,8 @@ export default function App()  {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
+      <Nav />
       <div id="main">
           <Outlet />
       </div>

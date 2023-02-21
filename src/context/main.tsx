@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { forage } from '@tauri-apps/tauri-forage';
 import { getVersion } from '@tauri-apps/api/app';
 import { TAccount, TSettings } from '../libs/types';
-import { createTheme, Theme, ThemeProvider } from '@mui/material';
+import { createTheme, CssBaseline, Theme, ThemeProvider } from '@mui/material';
 
 export type TAppContext = {
   theme: Theme;
@@ -26,7 +26,7 @@ type Props = {
 export const AppProvider: React.FC<Props> = ({ children }) => {
 
   const [accounts, setAccounts] = useState<TAccount[]>();
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode, setMode] = useState<'light' | 'dark'>('dark');
   const [isLoading, setIsLoading] = useState(false);
   const [appVersion, setAppVersion] = useState<string>();
   const [settings, setSettings] = useState<TSettings>({
@@ -57,6 +57,8 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
           root: {
             // backgroundColor: '#64bdac',
             transition: 'all 0.3s',
+            // borderRadius: '14px',
+            // color: '#ddd',
             textDecoration: 'none',
             // Some CSS
             '&:hover': {
@@ -77,7 +79,7 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
         }
         : {
           background: {
-            default: '#202124',
+            default: '#2e2e2e',
           },
           border: '#444',
         }),
@@ -150,5 +152,5 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
     ],
   );
 
-  return <AppContext.Provider value={memoizedValue}><ThemeProvider theme={theme}>{children}</ThemeProvider></AppContext.Provider>;
+  return <AppContext.Provider value={memoizedValue}><ThemeProvider theme={theme}><CssBaseline />{children}</ThemeProvider></AppContext.Provider>;
 };

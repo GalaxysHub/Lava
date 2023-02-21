@@ -1,5 +1,7 @@
+import { Box, Grid, Tab, Tabs, useTheme } from "@mui/material"
 import React from "react"
-import { Box, Button, Grid, Stack, Tab, Tabs, useTheme } from "@mui/material"
+import BlockListPage from "./BlockListPage";
+import TransactionListPage from "./TransactionListPage";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -7,13 +9,13 @@ interface TabPanelProps {
   value: number;
 }
 
-export default function SettingsPage() {
+export default function ExplorerPage() {
 
   const theme = useTheme();
 
   function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
-
+  
     return (
       <div
         role="tabpanel"
@@ -46,44 +48,22 @@ export default function SettingsPage() {
 
   return (
     <>
+      {/* <h2>Chain Explorer</h2> */}
+
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="General settings" {...a11yProps(0)} />
-          <Tab label="Explorer settings" {...a11yProps(1)} />
-          <Tab label="Workspaces settings" {...a11yProps(1)} />
-          <Tab label="About" {...a11yProps(1)} />
+          <Tab label="Blocks" {...a11yProps(0)} />
+          <Tab label="Transactions" {...a11yProps(1)} />
         </Tabs>
       </Box>
 
       <TabPanel value={value} index={0}>
-        General settings
+        <BlockListPage />
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-        Explorer settings
+        <TransactionListPage />
       </TabPanel>
-
-      <TabPanel value={value} index={2}>
-        Workspaces settings
-      </TabPanel>
-
-      <TabPanel value={value} index={3}>
-        About us
-      </TabPanel>
-
-
-      <Box className="tab-button-group">
-        <Stack spacing={1} direction="row">
-          <Button variant="outlined">
-            Cancel
-          </Button>
-
-          <Button variant="contained">
-            Save Settings
-          </Button>
-        </Stack>
-      </Box>
-
 
     </>
   )

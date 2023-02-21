@@ -55,7 +55,7 @@ export default function KeyItem(item: TAccount) {
             <Box className="active">
               {/* <PersonOutlineIcon fontSize="inherit" sx={{ mb: '-2px' }} /> */}
               {`#${item.index}:`}
-              <Box component={'span'} color={theme.palette.primary.dark} fontWeight='700' >{item.alias}</Box>
+              <Box component={'span'} color={theme.palette.primary.main} fontWeight='700' >{item.alias}</Box>
               <Tooltip title="Edit alias" arrow placement="right" >
                 <EditIcon className="edit-btn" onClick={(event) => handleEditAliaslick(event, item.keypair)} fontSize="inherit" sx={{ cursor: "pointer", ml: '5px' }} />
               </Tooltip>

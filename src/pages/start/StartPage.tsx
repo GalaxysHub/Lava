@@ -49,11 +49,11 @@ export default function StartPage() {
 
   return (
     <>
-      <Box id="start-page" bgcolor={theme.palette.primary.light} textAlign={"center"} display="flex" height={"100vh"}>
+      <Box id="start-page" bgcolor={theme.palette.secondary.light} textAlign={"center"} display="flex" height={"100vh"}>
 
         {!start
           ?
-          <Box margin={"auto"} minWidth="300px">
+          <Box margin={"auto"} minWidth="300px" color={theme.palette.common.white} >
 
             <Box component={'span'} fontSize={'3.5rem'} fontWeight="700" letterSpacing={"0.5rem"}>LAVA</Box>
             <br />
