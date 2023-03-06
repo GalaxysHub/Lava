@@ -2,14 +2,9 @@ import { Box } from "@mui/material"
 import { CircularProgress } from "@mui/material"
 import { useEffect, useState } from "react"
 
-
 const MESSAGES_INTERVAL = 600;
 
 export default function NewWorkspaceLoader() {
-
-  // JUST DUMMY LOADER
-  // TO-DO: Real processing event messages
-
   let events: string[] = [
     "Creating accounts ...",
     "Starting test validator ...",
@@ -20,20 +15,7 @@ export default function NewWorkspaceLoader() {
 
 
   useEffect(() => {
-
-    const interval = setInterval(() => {
-      console.log(events)
-      setStatusString(events[0]);
-      events.shift();
-
-      if (!events.length) {
-        clearInterval(interval);
-      }
-    }, MESSAGES_INTERVAL);
-
-    return () => {
-      clearInterval(interval);
-    };
+    setStatusString("Starting Test Validator");
   }, []);
 
   return (

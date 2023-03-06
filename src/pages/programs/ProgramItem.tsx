@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react"
 import { AppContext } from "../../context/main";
 import { Box, Dialog, DialogContent, FormControl, IconButton, Input, InputAdornment, InputLabel, Link, OutlinedInput, TextField, Tooltip, useTheme } from "@mui/material"
-import { TAccount } from "../../libs/types"
+import { TProgram } from "../../libs/types"
 import { Keypair } from "@solana/web3.js";
 import EditIcon from '@mui/icons-material/Edit';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
@@ -9,19 +9,18 @@ import { CopyToClipboard } from "../../components/helpers/CopyToClipBoard";
 import { minimizeStr } from "../../utils/helper";
 import { NavLink } from "react-router-dom";
 
-interface AccountItemProps {
+interface ProgranItemProps {
   index: number,
-  account: TAccount,
+  program: TProgram,
 }
 
-export default function KeyItem(props: AccountItemProps) {
+export default function ProgramItem(props: ProgranItemProps) {
 
-  const { index, account } = props;
+  const { index, program } = props;
 
   const { workspace, setWorkspace } = useContext(AppContext);
-  const theme = useTheme();
 
-  const [alias, setAlias] = useState(account.alias);
+  const [alias, setAlias] = useState(program.alias);
 
   // Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -43,41 +42,42 @@ export default function KeyItem(props: AccountItemProps) {
     event.preventDefault();
     setDialogOpen(false);
 
-    if (workspace?.accounts && alias !== "") {
+    if (workspace?.programs && alias !== "") {
       let newWorkspace = Object.assign(Object.create(Object.getPrototypeOf(workspace)), workspace);
-      newWorkspace.accounts[index].alias = alias;
+      newWorkspace.programs[index].alias = alias;
       setWorkspace(newWorkspace);
     }
   }
 
+  const theme = useTheme();
+
   return (
 
     <>
-
       <Box>
-        <Box className={account.alias ? 'active' : ''}>
+        <Box className={program.alias ? 'active' : ''}>
           {/* <PersonOutlineIcon fontSize="inherit" sx={{ mb: '-2px' }} /> */}
-          {account.alias ?
+          {program.alias ?
             <>
               {`#${index + 1}:`}
-              <Box component={'span'} color={theme.palette.primary.main} fontWeight='700' >{account.alias}</Box>
+              <Box component={'span'} color={theme.palette.primary.main} fontWeight='700' >{program.alias}</Box>
             </>
             :
             `Workspace Program #${index + 1}`
           }
           <Tooltip title="Edit alias" arrow placement="right" >
-            <EditIcon className="edit-btn" onClick={(event) => handleEditAliaslick(event, account.keypair)} fontSize="inherit" sx={{ cursor: "pointer", ml: '5px' }} />
+            <EditIcon className="edit-btn" onClick={(event) => handleEditAliaslick(event, program.account)} fontSize="inherit" sx={{ cursor: "pointer", ml: '5px' }} />
           </Tooltip>
         </Box>
         <Box>
-          <Link 
-          component={NavLink} 
-          to={`/accounts/${account.keypair.publicKey.toString()}`}
-          color={theme.palette.text.primary}
+          <Link
+            component={NavLink}
+            to={`/programs/${program.account.publicKey.toString()}`}
+            color={theme.palette.text.primary}
           >
-            {account.keypair.publicKey.toString()}
+            {program.account.publicKey.toString()}
           </Link>
-          <CopyToClipboard textToCopy={account.keypair.publicKey.toString()} notification='snackbar' />
+          <CopyToClipboard textToCopy={program.account.publicKey.toString()} notification='snackbar' />
         </Box>
 
       </Box>
@@ -105,16 +105,16 @@ export default function KeyItem(props: AccountItemProps) {
                 htmlFor="alias-input"
               >
                 {alias.length > 0
-                  ? `Edit alias for account #${index + 1} (${minimizeStr(account.keypair.publicKey.toString(), 4, 4)}) `
-                  : `Create alias for account #${index + 1} (${minimizeStr(account.keypair.publicKey.toString(), 4, 4)})`
+                  ? `Edit alias for account #${index + 1} (${minimizeStr(program.account.publicKey.toString(), 4, 4)}) `
+                  : `Create alias for account #${index + 1} (${minimizeStr(program.account.publicKey.toString(), 4, 4)})`
                 }
               </InputLabel>
               <Input
                 id="alias-input"
                 value={alias}
                 placeholder={alias.length > 0
-                  ? `Edit alias for account #${index + 1} (${minimizeStr(account.keypair.publicKey.toString(), 4, 4)}) `
-                  : `Create alias for account #${index + 1} (${minimizeStr(account.keypair.publicKey.toString(), 4, 4)})`
+                  ? `Edit alias for account #${index + 1} (${minimizeStr(program.account.publicKey.toString(), 4, 4)}) `
+                  : `Create alias for account #${index + 1} (${minimizeStr(program.account.publicKey.toString(), 4, 4)})`
                 }
                 endAdornment={
                   <InputAdornment position="end">

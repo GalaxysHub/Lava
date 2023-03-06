@@ -1,5 +1,7 @@
 import { Box, Grid, Tab, Tabs, useTheme } from "@mui/material"
 import React from "react"
+import BlockListPage from "./BlockListPage";
+import TransactionListPage from "./TransactionListPage";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -7,7 +9,7 @@ interface TabPanelProps {
   value: number;
 }
 
-export default function LogPage() {
+export default function ExplorerPage() {
 
   const theme = useTheme();
 
@@ -46,24 +48,26 @@ export default function LogPage() {
 
   return (
     <>
+      {/* <h2>Chain Explorer</h2> */}
+
       <Box
         sx={{ borderBottom: 1, borderColor: 'divider' }}
         className='tabs-panel'
         bgcolor={theme.palette.background.default}
       >
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Live Log" {...a11yProps(0)} />
-          <Tab label="Search in Log" {...a11yProps(1)} />
+          <Tab label="Transactions" {...a11yProps(0)} />
+          <Tab label="Blocks" {...a11yProps(1)} />
         </Tabs>
       </Box>
 
       <Box mt='30px'>
         <TabPanel value={value} index={0}>
-          Log items
+          <TransactionListPage />
         </TabPanel>
 
         <TabPanel value={value} index={1}>
-          Log search
+          <BlockListPage />
         </TabPanel>
       </Box>
 
