@@ -4,6 +4,7 @@ import { Box, Dialog, DialogContent, useTheme } from "@mui/material"
 import { Button } from "@mui/material"
 import { AppContext } from "../../context/main"
 import { useNavigate } from "react-router-dom";
+import { invoke } from '@tauri-apps/api/tauri'
 import NewWorkspaceLoader from "../../components/loader/NewWorkspaceLoader"
 import { TSettings } from "../../libs/types"
 
@@ -12,11 +13,12 @@ export default function StartPage() {
   const { settings, setSettings, setAccounts } = useContext(AppContext);
 
   const [start, setStart] = useState(false);
+  const [status, setStatus] = useState("");
 
-  const quickStartHandle = (event: React.MouseEvent<HTMLElement>, value?: any) => {
+  const quickStartHandle = async (event: React.MouseEvent<HTMLElement>, value?: any) => {
     // Show loader
     setStart(true);
-
+    setStatus("Generating accounts");
     // create settings
     // const newSettings:TSettings = {
     //   validatorHostame: "127.0.0.1",
@@ -28,8 +30,10 @@ export default function StartPage() {
     // create accounts
     const keys = generateKeypairs(settings.keysCount);
     setAccounts(keys);
-
-    setTimeout(() => { navigate('/accounts/') }, 3000);
+    setStatus("Starting Validator");
+    const validatorAddress: string = await invoke('start_validator', { private_key: keys[0].keypair.secretKey.toString()});
+    setStatus(validatorAddress);
+    navigate('/accounts');
   }
 
   const openWorkspaceHandle = (event: React.MouseEvent<HTMLElement>, value?: any) => {
@@ -105,6 +109,7 @@ export default function StartPage() {
             aria-labelledby="responsive-dialog-title"
           >
             <DialogContent >
+              <p>{status}</p>
               <NewWorkspaceLoader />
             </DialogContent>
 

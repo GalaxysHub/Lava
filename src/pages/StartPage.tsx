@@ -7,10 +7,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function StartPage() {
   const navigate = useNavigate();
-  const {collectAccounts} = useContext(AppContext);
+  const { accounts } = useContext(AppContext);
 
-  const startHandle = (event: React.MouseEvent<HTMLElement>, value?: any) => {
-    collectAccounts(10);
+  const startHandle = async (event: React.MouseEvent<HTMLElement>, value?: any) => {
     navigate('/accounts/');
   }
 
