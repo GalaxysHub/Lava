@@ -13,7 +13,7 @@ export default function WalletPage() {
 
   function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
-  
+
     return (
       <div
         role="tabpanel"
@@ -46,15 +46,21 @@ export default function WalletPage() {
 
   return (
     <>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box
+        sx={{ borderBottom: 1, borderColor: 'divider' }}
+        className='tabs-panel'
+        bgcolor={theme.palette.background.default}
+      >
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Wallet" {...a11yProps(0)} />
         </Tabs>
       </Box>
 
-      <TabPanel value={value} index={0}>
-        Walet UI
-      </TabPanel>
+      <Box mt='30px'>
+        <TabPanel value={value} index={0}>
+          Walet UI
+        </TabPanel>
+      </Box>
 
     </>
   )

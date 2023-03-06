@@ -1,20 +1,20 @@
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { forage } from '@tauri-apps/tauri-forage';
 import { getVersion } from '@tauri-apps/api/app';
-import { TAccount, TSettings } from '../libs/types';
 import { createTheme, CssBaseline, Theme, ThemeProvider } from '@mui/material';
+import { Workspace } from '../libs';
 
 export type TAppContext = {
   theme: Theme;
   mode: 'light' | 'dark';
   appVersion?: string;
-  accounts?: TAccount[];
-  settings: TSettings;
+  workspace?: Workspace;
   isLoading: boolean;
+  quickSearch?: string | undefined;
+  setQuickSearch: (quickSerach: string | undefined) => void;
   handleSwitchMode: () => void;
   setIsLoading: (isLoading: boolean) => void;
-  setAccounts: (accounts: TAccount[]) => void;
-  setSettings: (settings: TSettings) => void;
+  setWorkspace: (workspace: Workspace) => void;
 };
 
 export const AppContext = createContext({} as TAppContext);
@@ -25,15 +25,11 @@ type Props = {
 };
 export const AppProvider: React.FC<Props> = ({ children }) => {
 
-  const [accounts, setAccounts] = useState<TAccount[]>();
   const [mode, setMode] = useState<'light' | 'dark'>('dark');
   const [isLoading, setIsLoading] = useState(false);
   const [appVersion, setAppVersion] = useState<string>();
-  const [settings, setSettings] = useState<TSettings>({
-    validatorHostame: "127.0.0.1",
-    vaidatorPort: 8899,
-    keysCount: 10,
-  })
+  const [workspace, setWorkspace] = useState<Workspace | undefined>()
+  const [quickSearch, setQuickSearch] = useState<string | undefined>()
 
   const theme = createTheme({
     components: {
@@ -62,7 +58,7 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
             textDecoration: 'none',
             // Some CSS
             '&:hover': {
-              
+
             },
           },
         },
@@ -94,13 +90,12 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
     },
     typography: {
       allVariants: {
-        
+
       },
     },
   });
 
   const clearState = () => {
-    setAccounts(undefined);
     setIsLoading(false);
   };
 
@@ -137,18 +132,19 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
       appVersion,
       theme,
       mode,
-      settings,
-      setSettings,
+      workspace,
+      setWorkspace,
       isLoading,
       setIsLoading,
-      accounts,
-      setAccounts,
       handleSwitchMode,
+      quickSearch,
+      setQuickSearch,
     }),
     [
       mode,
       isLoading,
-      accounts
+      workspace,
+      quickSearch,
     ],
   );
 

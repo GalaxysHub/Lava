@@ -7,12 +7,12 @@ import { AppContext } from './context/main';
 
 export default function App()  {
 
-  const {accounts} = useContext(AppContext)
+  const {workspace} = useContext(AppContext);
   // console.log(accounts);
 
   const navigate = useNavigate();
 
-  if (!accounts || accounts?.length === 0) {
+  if (!workspace || !workspace.accounts || workspace.accounts?.length === 0) {
     navigate('/start/');
   }
 

@@ -3,8 +3,13 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 import { keyframes } from '@mui/system';
 
+interface BlinkerProps {
+  color: 'success' | 'error';
+}
 
-export default function Blinker() {
+export default function Blinker(props: BlinkerProps) {
+
+  const { color } = props;
 
   const blink = keyframes`
     from { opacity: 0; }
@@ -14,10 +19,14 @@ export default function Blinker() {
   return (
 
     <FiberManualRecordIcon
-      color={'success'}
+      color={color}
       fontSize={'inherit'}
-      sx={{animation: `${blink} 1.5s linear infinite`, mb:'-2px', mr:'1px' }}
+      sx={{
+        animation: `${blink} 1.5s linear infinite`,
+        mb: '-2px',
+        mr: '1px'
+      }}
     />
-    
+
   );
 }

@@ -1,12 +1,18 @@
 import React, { useContext, useState } from "react"
-import { Box, Divider, IconButton, Popover } from "@mui/material"
+import { Box, IconButton, Popover, Tooltip, useTheme } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import StopIcon from '@mui/icons-material/Stop';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { AppContext } from "../../context/main";
 import Blinker from "../helpers/Blinker";
 
 export default function NodeBlock() {
 
-  const { settings } = useContext(AppContext);
+  const theme = useTheme();
+  
+  const { workspace } = useContext(AppContext);
+
+  const [nodeStatus, setNodeStatus] = useState(true)
 
   const [data, setData] = useState({
     clusterStatus: true,
@@ -15,10 +21,24 @@ export default function NodeBlock() {
     txCount: 0,
   })
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleNodeClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
+  }
+
+  const handleStopClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (workspace) {
+      workspace.validator.stop();
+      setNodeStatus(workspace.validatorStatus);
+    }
+  };
+
+  const handleStartClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (workspace) {
+      workspace.validator.start();
+      setNodeStatus(workspace.validatorStatus);
+    }
   };
 
   const handleClose = () => {
@@ -30,24 +50,22 @@ export default function NodeBlock() {
 
   return (
     <>
-      <Box>
-        <span>Node Status</span>
-        
-        <span><Blinker />{true ? 'RUNNING' : 'STOPPED'}</span>
-      </Box>
-
-      <IconButton
-        size='small'
-        onClick={handleClick}
-        // sx={{ ml: 2 }}
-        aria-describedby={id}
-        aria-label="node-expand"
-        aria-controls={open ? 'node-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-      >
-        <ExpandMoreIcon fontSize='medium' />
-      </IconButton>
+      <Tooltip title="Click to show details" arrow placement="bottom" >
+        <Box
+          onClick={handleNodeClick}
+          sx={{ cursor: 'pointer', mr: '10px' }}
+        >
+          <Box display={'inline-block'}>
+            <span>Node Status</span>
+            {workspace?.validatorStatus ?
+              <Box component={'span'}><Blinker color='success' />RUNNING</Box>
+              :
+              <Box component={'span'} color={theme.palette.secondary.main}><Blinker color='error' />STOPPED</Box>
+            }
+          </Box>
+          <ExpandMoreIcon fontSize='medium' />
+        </Box>
+      </Tooltip>
 
       <Popover
         id={id}
@@ -66,7 +84,7 @@ export default function NodeBlock() {
         <Box m={'20px'}>
           <Box>
             <span>RPC:</span>
-            <span>{settings.validatorHostame}:{settings.vaidatorPort}</span>
+            <span>{workspace?.validator.hostname}:{workspace?.validator.rpcPort}</span>
           </Box>
 
           <Box>
@@ -85,6 +103,27 @@ export default function NodeBlock() {
           </Box>
         </Box>
       </Popover>
+
+      <Tooltip title="Stop Validator node" arrow placement="bottom" >
+        <IconButton
+          size='small'
+          onClick={handleStopClick}
+          disabled={!nodeStatus}
+        // sx={{ ml: 2 }}
+        >
+          <StopIcon fontSize='small' sx={{ m: '2px' }} />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title="Start Validator node" arrow placement="bottom" >
+        <IconButton
+          size='small'
+          onClick={handleStartClick}
+          disabled={nodeStatus}
+        >
+          <PlayArrowIcon fontSize='small' sx={{ m: '2px' }} />
+        </IconButton>
+      </Tooltip>
 
     </>
   )

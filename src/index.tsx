@@ -19,6 +19,8 @@ import StartPage from './pages/start/StartPage';
 import { AppProvider } from './context/main';
 import reportWebVitals from './reportWebVitals';
 import ExplorerPage from './pages/explorer/ExplorerPage';
+import ProgramDetailsPage from './pages/programs/ProgramDetailsPage';
+import AccountDetailsPage from './pages/explorer/AccountDetailsPage';
 
 
 const router = createBrowserRouter([
@@ -37,35 +39,29 @@ const router = createBrowserRouter([
         element: <AccountListPage />,
       },
       {
+        path: "accounts/:accountId",
+        element: <AccountDetailsPage />,
+      },
+      {
         path: "programs/",
         element: <ProgramListPage />,
       },
       {
+        path: "programs/:programId",
+        element: <ProgramDetailsPage />,
+      },
+      {
         path: "explorer/",
         element: <ExplorerPage />,
-        children: [
-          {
-            path: "blocks/",
-            element: <ExplorerPage />,
-            children: [
-              {
-                path: ":blockId/",
-                element: <BlockDetailsPage />,
-              }
-            ]
-          },
-          {
-            path: "txs/",
-            element: <ExplorerPage />,
-            children: [
-              {
-                path: ":blockId/",
-                element: <TransactionDetailsPage />,
-              }
-            ]
-          },
-        ]
       }, 
+      {
+        path: "blocks/:blockId",
+        element: <BlockDetailsPage />,
+      },
+      {
+        path: "txs/:txId",
+        element: <TransactionDetailsPage />,
+      },
       {
         path: "faucet/",
         element: <FaucetPage />,

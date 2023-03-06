@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { Box, Divider, IconButton, ListItemIcon, Menu, MenuItem, Popover, Tooltip } from "@mui/material"
+import { Box, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem, Popover, Tooltip } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DvrIcon from '@mui/icons-material/Dvr';
 import SaveIcon from '@mui/icons-material/Save';
@@ -8,7 +8,7 @@ import { Logout } from "@mui/icons-material";
 
 export default function WorkspaceBlock() {
 
-  const { settings } = useContext(AppContext);
+  const { workspace } = useContext(AppContext);
 
   const [data, setData] = useState({
     clusterStatus: true,
@@ -19,7 +19,7 @@ export default function WorkspaceBlock() {
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -33,22 +33,33 @@ export default function WorkspaceBlock() {
 
     <Box display={"flex"} mr="15px">
       <Tooltip title="Current Workspace" arrow placement="bottom" >
-        <Box margin={'auto'}>
-          <DvrIcon fontSize="small" sx={{ mb: '-4px' }} /> :
-          Workspace Name
-        </Box>
-      </Tooltip>
+        {/* <Box
+          // size='small'
+          onClick={handleClick}
+          aria-controls={open ? 'workspace-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          sx={{ cursor: 'pointer', mr: '10px' }}
+        >
+          <Box margin={'auto'} display={'inline-block'}>
+            <DvrIcon fontSize="small" /> :
+            Workspace Name
+          </Box>
+          <ExpandMoreIcon fontSize='medium' sx={{ mb: '-4px' }} />
+        </Box> */}
 
-      <IconButton
-        size='small'
-        onClick={handleClick}
-        // sx={{ ml: 2 }}
-        aria-controls={open ? 'workspace-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-      >
-        <ExpandMoreIcon fontSize='medium' />
-      </IconButton>
+        <Button
+          size="small"
+          startIcon={<DvrIcon />}
+          endIcon={<ExpandMoreIcon />}
+          onClick={handleClick}
+          aria-controls={open ? 'workspace-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+        >
+          Workspace
+        </Button>
+      </Tooltip>
 
       <Menu
         anchorEl={anchorEl}

@@ -91,12 +91,12 @@ aside {
   width: 60px;
 }
 
-aside > div:last-child {
+aside>div:last-child {
   margin-bottom: 50px;
 }
 
 aside .side-menu-item {
-  padding: 10px 0;
+  padding: 8px 0;
   text-align: center;
 }
 
@@ -106,7 +106,7 @@ aside .side-menu-item {
 
 aside a {
   color: #ccc;
-  transition:  all 0.3s;
+  transition: all 0.3s;
 }
 
 aside a:hover {
@@ -124,7 +124,7 @@ aside a:hover {
   padding: 0 10px;
   font-size: 1.2rem;
   color: #ccc;
-  transition:  all 0.3s;
+  transition: all 0.3s;
 }
 
 #menu a:hover {
@@ -134,33 +134,6 @@ aside a:hover {
 #search {
   width: 100%;
 }
-
-#search input {
-  width: 100%;
-  padding: 0 15px;
-  /* background-color: #333; */
-  background: transparent;
-  height: 35px;
-  border-radius: 16px;
-  border: 1px solid #ccc;
-  transition: all 0.3s;
-}
-
-#search input:focus, #search input:focus-visible, #search input:active {
-  /* background-color: #444; */
-  border-color: #999;
-  outline: none;
-  color: #ccc;
-}
-
-#search input::-webkit-input-placeholder       {opacity: 1; transition: opacity 0.3s ease; color: #eee;}
-#search input::-moz-placeholder                {opacity: 1; transition: opacity 0.3s ease; color: #eee;}
-#search input:-moz-placeholder                 {opacity: 1; transition: opacity 0.3s ease; color: #eee;}
-#search input:-ms-input-placeholder            {opacity: 1; transition: opacity 0.3s ease; color: #eee;}
-#search input:focus::-webkit-input-placeholder {opacity: 0; transition: opacity 0.3s ease; color: #eee;}
-#search input:focus::-moz-placeholder          {opacity: 0; transition: opacity 0.3s ease; color: #eee;}
-#search input:focus:-moz-placeholder           {opacity: 0; transition: opacity 0.3s ease; color: #eee;}
-#search input:focus:-ms-input-placeholder      {opacity: 0; transition: opacity 0.3s ease; color: #eee;}
 
 #submenu {
   padding: 5px 20px;
@@ -180,7 +153,7 @@ aside a:hover {
   display: inline-flex;
   /* font-size: 1.2rem; */
   color: #eee;
-  transition:  all 0.3s;
+  transition: all 0.3s;
 }
 
 #submenu a:hover {
@@ -234,11 +207,11 @@ footer span:hover {
   transition: all, 0.3s;
 }
 
-.key-item > div > div:first-child {
+.key-item>div>div:first-child {
   opacity: 0.6;
 }
 
-.key-item > div > div.active {
+.key-item>div>div.active {
   opacity: 1;
 }
 
@@ -246,7 +219,7 @@ footer span:hover {
   opacity: 0.6;
 }
 
-.key-item .edit-btn:hover  {
+.key-item .edit-btn:hover {
   opacity: 1;
 }
 
@@ -258,4 +231,56 @@ footer span:hover {
 .tab-button-group {
   position: fixed;
   bottom: 45px;
+}
+
+
+.search-result-block ul {
+  padding-bottom: 2px;
+}
+
+.search-result-footer {
+  /* padding-top: 15px; */
+  float: right;
+}
+
+.search-result-footer span {
+  margin: 0 4px;
+  border-radius: 4px;
+  padding: 0 2px;
+  font-size: 0.8rem;
+  /* font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+}
+
+.search-item-name {
+  margin-right: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.long-string {
+  /* margin-right: 5px; */
+  float: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-item-name span {
+  display: inline;
+
+}
+
+.page-header {
+  /* margin-top: -10px; */
+  padding: 5px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.tabs-panel {
+  position: fixed;
+  top: 46px;
+  width: 100%;
+  z-index: 999;
 }

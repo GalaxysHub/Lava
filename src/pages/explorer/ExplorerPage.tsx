@@ -15,7 +15,7 @@ export default function ExplorerPage() {
 
   function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
-  
+
     return (
       <div
         role="tabpanel"
@@ -50,20 +50,26 @@ export default function ExplorerPage() {
     <>
       {/* <h2>Chain Explorer</h2> */}
 
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box
+        sx={{ borderBottom: 1, borderColor: 'divider' }}
+        className='tabs-panel'
+        bgcolor={theme.palette.background.default}
+      >
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Blocks" {...a11yProps(0)} />
-          <Tab label="Transactions" {...a11yProps(1)} />
+          <Tab label="Transactions" {...a11yProps(0)} />
+          <Tab label="Blocks" {...a11yProps(1)} />
         </Tabs>
       </Box>
 
-      <TabPanel value={value} index={0}>
-        <BlockListPage />
-      </TabPanel>
+      <Box mt='30px'>
+        <TabPanel value={value} index={0}>
+          <TransactionListPage />
+        </TabPanel>
 
-      <TabPanel value={value} index={1}>
-        <TransactionListPage />
-      </TabPanel>
+        <TabPanel value={value} index={1}>
+          <BlockListPage />
+        </TabPanel>
+      </Box>
 
     </>
   )

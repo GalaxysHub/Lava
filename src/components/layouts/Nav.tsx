@@ -16,6 +16,8 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import QueuePlayNextIcon from '@mui/icons-material/QueuePlayNext';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import LogoutIcon from '@mui/icons-material/Logout';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import Grid from '@mui/material/Grid';
 import { Button, IconButton, Link, Stack, Tooltip, useTheme } from '@mui/material';
 import NodeBlock from './NodeBlock';
@@ -25,7 +27,7 @@ export default function Nav() {
 
   const theme = useTheme();
 
-  const { settings, handleSwitchMode } = useContext(AppContext);
+  const { workspace, handleSwitchMode } = useContext(AppContext);
 
   const fetchData = () => {
     // TO-DO
@@ -42,20 +44,24 @@ export default function Nav() {
         <Grid container spacing={1}>
 
           <Grid item xs={1} margin="auto">
-            <Box className="logo">
-              <Link href="https://github.com/Web3-Builders-Alliance/Lava" target={"_blank"}>
+            <Box className="logo">          
                 <span>Lava</span>
                 <sup>beta</sup>
-              </Link>
             </Box>
           </Grid>
 
           <Grid item xs={3} margin="auto" display={"flex"} >
             <WorkspaceBlock />
-            
+
             <Tooltip title="Create New Workspace" arrow placement="bottom" >
               <IconButton component={NavLink} to="/start" aria-label="workspace-new" size='small'>
                 <QueuePlayNextIcon fontSize='small' />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Exit" arrow placement="bottom" >
+              <IconButton aria-label="exit" size='small' sx={{ml:'10px'}}>
+                <LogoutIcon fontSize='small' />
               </IconButton>
             </Tooltip>
           </Grid>
@@ -89,51 +95,51 @@ export default function Nav() {
 
 
           <Box className="side-menu-item">
-            <Link component={NavLink} to="accounts/">
-              <Tooltip title="Accounts" arrow placement="right" >
+            <Tooltip title="Accounts" arrow placement="right" >
+              <IconButton component={NavLink} to="accounts/" color='primary'>
                 <PersonIcon fontSize="medium" />
-              </Tooltip>
-            </Link>
+              </IconButton>
+            </Tooltip>
           </Box>
 
           <Box className="side-menu-item">
-            <Link component={NavLink} to="programs/">
-              <Tooltip title="Programs" arrow placement="right" >
+            <Tooltip title="Programs" arrow placement="right" >
+              <IconButton component={NavLink} to="programs/" color='primary'>
                 <AssignmentOutlinedIcon fontSize="medium" />
-              </Tooltip>
-            </Link>
+              </IconButton>
+            </Tooltip>
           </Box>
 
           <Box className="side-menu-item">
-            <Link component={NavLink} to="explorer/">
-              <Tooltip title="Explorer" arrow placement="right" >
+            <Tooltip title="Explorer" arrow placement="right" >
+              <IconButton component={NavLink} to="explorer/" color='primary'>
                 <WidgetsOutlinedIcon fontSize="medium" />
-              </Tooltip>
-            </Link>
+              </IconButton>
+            </Tooltip>
           </Box>
 
           <Box className="side-menu-item">
-            <Link component={NavLink} to="logs/">
-              <Tooltip title="Chain Log" arrow placement="right" >
+            <Tooltip title="Chain Log" arrow placement="right" >
+              <IconButton component={NavLink} to="logs/" color='primary'>
                 <TerminalIcon fontSize="medium" />
-              </Tooltip>
-            </Link>
+              </IconButton>
+            </Tooltip>
           </Box>
 
           <Box className="side-menu-item">
-            <Link component={NavLink} to="faucet/">
-              <Tooltip title="Faucet" arrow placement="right" >
+            <Tooltip title="Faucet" arrow placement="right" >
+              <IconButton component={NavLink} to="faucet/" color='primary'>
                 <OpacityIcon fontSize="medium" />
-              </Tooltip>
-            </Link>
+              </IconButton>
+            </Tooltip>
           </Box>
 
           <Box className="side-menu-item">
-            <Link component={NavLink} to="wallet/">
-              <Tooltip title="Wallet" arrow placement="right" >
+            <Tooltip title="Wallet" arrow placement="right" >
+              <IconButton component={NavLink} to="wallet/" color='primary'>
                 <AccountBalanceWalletIcon fontSize="medium" />
-              </Tooltip>
-            </Link>
+              </IconButton>
+            </Tooltip>
           </Box>
 
           <Box className="side-menu-item">
@@ -141,34 +147,34 @@ export default function Nav() {
           </Box>
 
           <Box className="side-menu-item">
-            <Link component={NavLink} to="settings/">
-              <Tooltip title="App Settings" arrow placement="right" >
+            <Tooltip title="App Settings" arrow placement="right" >
+              <IconButton component={NavLink} to="settings/" color='primary'>
                 <SettingsIcon fontSize="medium" />
-              </Tooltip>
-            </Link>
+              </IconButton>
+            </Tooltip>
           </Box>
         </Box>
 
         <Box>
           <Box className="side-menu-item">
-            <Link href='#' onClick={e => modeHandler(e)}>
-              <Tooltip title={`Switch to ${theme.palette.mode === 'dark' ? 'Light' : 'Dark'} mode`} arrow placement="right" >
+            <Tooltip title={`Switch to ${theme.palette.mode === 'dark' ? 'Light' : 'Dark'} mode`} arrow placement="right" >
+              <IconButton href='#' onClick={e => modeHandler(e)} color='primary'>
                 {theme.palette.mode === 'dark'
                   ?
                   <LightModeIcon fontSize="medium" />
                   :
                   <NightsStayIcon fontSize="medium" sx={{ transform: 'rotate(0deg)' }} />
                 }
-              </Tooltip>
-            </Link>
+              </IconButton>
+            </Tooltip>
           </Box>
 
           <Box className="side-menu-item">
-            <Link component={NavLink} to="https://github.com/Web3-Builders-Alliance/Lava" target={"_blank"}>
-              <Tooltip title="Go To Lava GitHub" arrow placement="right" >
-                <GitHubIcon fontSize="medium" sx={{ fontSize: '1.4rem' }} />
-              </Tooltip>
-            </Link>
+            <Tooltip title="Lava Docs" arrow placement="right" >
+              <IconButton color='primary'>
+                <MenuBookIcon fontSize="medium" sx={{ fontSize: '1.4rem' }} />
+              </IconButton>
+            </Tooltip>
           </Box>
         </Box>
       </Box>

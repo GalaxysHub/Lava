@@ -46,7 +46,11 @@ export default function SettingsPage() {
 
   return (
     <>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box
+        sx={{ borderBottom: 1, borderColor: 'divider' }}
+        className='tabs-panel'
+        bgcolor={theme.palette.background.default}
+      >
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="General settings" {...a11yProps(0)} />
           <Tab label="Explorer settings" {...a11yProps(1)} />
@@ -55,21 +59,23 @@ export default function SettingsPage() {
         </Tabs>
       </Box>
 
-      <TabPanel value={value} index={0}>
-        General settings
-      </TabPanel>
+      <Box mt='30px'>
+        <TabPanel value={value} index={0}>
+          General settings
+        </TabPanel>
 
-      <TabPanel value={value} index={1}>
-        Explorer settings
-      </TabPanel>
+        <TabPanel value={value} index={1}>
+          Explorer settings
+        </TabPanel>
 
-      <TabPanel value={value} index={2}>
-        Workspaces settings
-      </TabPanel>
+        <TabPanel value={value} index={2}>
+          Workspaces settings
+        </TabPanel>
 
-      <TabPanel value={value} index={3}>
-        About us
-      </TabPanel>
+        <TabPanel value={value} index={3}>
+          About us
+        </TabPanel>
+      </Box>
 
 
       <Box className="tab-button-group">

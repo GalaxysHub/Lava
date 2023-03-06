@@ -17,12 +17,12 @@ import { Stack, Tooltip } from '@mui/material';
 
 export default function Header() {
 
-  const {settings} = useContext(AppContext);
+  const { workspace } = useContext(AppContext);
 
   const [data, setData] = useState({
     currentEpoch: 0,
     currentBlock: 0,
-    txCount:0,
+    txCount: 0,
   })
 
   const fetchData = () => {
@@ -50,17 +50,17 @@ export default function Header() {
             </NavLink>
 
             <NavLink to="txs/">
-              <AssignmentOutlinedIcon fontSize="medium"/>
+              <AssignmentOutlinedIcon fontSize="medium" />
               Transactions
             </NavLink>
 
             <NavLink to="logs/">
-              <TerminalIcon fontSize="medium"/>
+              <TerminalIcon fontSize="medium" />
               Logs
             </NavLink>
 
             <NavLink to="faucet/">
-              <OpacityIcon fontSize="medium"/>
+              <OpacityIcon fontSize="medium" />
               Faucet
             </NavLink>
 
@@ -80,29 +80,29 @@ export default function Header() {
         <Grid container spacing={1}>
 
           <Grid item xs={8} margin="auto" >
-              <span>RPC Node: {settings.validatorHostame}:{settings.vaidatorPort}</span>
-              <span>Current epoch: {data.currentEpoch}</span>
-              <span>Current blocks: {data.currentBlock}</span>
-              <span>Txs total: {data.txCount}</span>
+            <span>RPC Node: {workspace?.validator.hostname}:{workspace?.validator.rpcPort}</span>
+            <span>Current epoch: {data.currentEpoch}</span>
+            <span>Current blocks: {data.currentBlock}</span>
+            <span>Txs total: {data.txCount}</span>
           </Grid>
 
           <Grid item xs={4} textAlign="center" margin={"auto"}>
-          <Stack 
-            direction="row"
-            justifyContent="center"
-            spacing={2}
+            <Stack
+              direction="row"
+              justifyContent="center"
+              spacing={2}
             >
-            <NavLink to="start/">
-              <Tooltip title="Settings Page" arrow placement="bottom" >
-                <ReplayIcon fontSize="medium" />
-              </Tooltip>
-            </NavLink>
+              <NavLink to="start/">
+                <Tooltip title="Settings Page" arrow placement="bottom" >
+                  <ReplayIcon fontSize="medium" />
+                </Tooltip>
+              </NavLink>
 
-            <NavLink to="settings/">
-              <Tooltip title="Settings Page" arrow placement="bottom" >
-                <SettingsIcon fontSize="medium" />
-              </Tooltip>
-            </NavLink>
+              <NavLink to="settings/">
+                <Tooltip title="Settings Page" arrow placement="bottom" >
+                  <SettingsIcon fontSize="medium" />
+                </Tooltip>
+              </NavLink>
             </Stack>
           </Grid>
 

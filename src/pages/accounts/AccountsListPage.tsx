@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Keypair } from "@solana/web3.js";
+import React, { useContext, useEffect, useState } from "react";
+import { Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,12 +11,12 @@ import KeyIcon from '@mui/icons-material/Key';
 import KeyItem from "./KeyItem";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import OpacityIcon from '@mui/icons-material/Opacity';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import SearchIcon from '@mui/icons-material/Search';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { QRCodeSVG } from 'qrcode.react';
 import { AppContext } from "../../context/main";
-import { Box, Dialog, DialogContent, Stack, Tab, Tabs, Tooltip } from "@mui/material";
+import { Box, Dialog, DialogContent, IconButton, Skeleton, Stack, Tab, Tabs, Tooltip, useTheme } from "@mui/material";
 
 
 export interface SimpleDialogProps {
@@ -34,10 +34,12 @@ interface TabPanelProps {
 
 export default function AccountListPage() {
 
-  const { accounts } = useContext(AppContext);
+  const theme = useTheme();
+
+  const { workspace, setWorkspace, setQuickSearch } = useContext(AppContext);
 
   const [secret, setSecret] = useState<string>("")
-  const showPrivateData = (event: React.MouseEvent<SVGSVGElement>, value: Keypair) => {
+  const showPrivateData = (event: React.MouseEvent<HTMLButtonElement>, value: Keypair) => {
     // console.log(value.secretKey)
 
     setSecret(value.secretKey.toString());
@@ -53,21 +55,25 @@ export default function AccountListPage() {
   };
 
   const [qrcode, setQrcode] = useState<string>("")
-  const handleQRClick = (event: React.MouseEvent<SVGSVGElement>, value: Keypair) => {
+  const handleQRClick = (event: React.MouseEvent<HTMLButtonElement>, value: Keypair) => {
     // console.log(value.publicKey)
     setQrcode(value.publicKey.toString());
     setDialogOpen(true);
   };
 
-  const swapToWallet = (event: React.MouseEvent<SVGSVGElement>, value: Keypair) => {
+  const swapToWallet = (event: React.MouseEvent<HTMLButtonElement>, value: Keypair) => {
     console.log(value.publicKey)
   }
 
-  const addFunds = (event: React.MouseEvent<SVGSVGElement>, value: Keypair) => {
+  const addFunds = (event: React.MouseEvent<HTMLButtonElement>, value: Keypair) => {
     console.log(value.publicKey)
   }
 
-  const saveJsonFile = (event: React.MouseEvent<SVGSVGElement>, value: Keypair) => {
+  const quickSearch = (event: React.MouseEvent<HTMLButtonElement>, value: Keypair) => {
+    setQuickSearch(value.publicKey.toString())
+  }
+
+  const saveJsonFile = (event: React.MouseEvent<HTMLButtonElement>, value: Keypair) => {
     console.log(value.publicKey)
   }
 
@@ -78,6 +84,7 @@ export default function AccountListPage() {
   };
 
   function TabPanel(props: TabPanelProps) {
+
     const { children, value, index, ...other } = props;
 
     return (
@@ -104,97 +111,135 @@ export default function AccountListPage() {
     };
   }
 
+  const [balances, setBalances] = useState<number[]>([]);
+
+  const updateAccounts = () => {
+    if (workspace?.accounts) {
+
+      const connection = new Connection(workspace.RPC, "confirmed");
+
+      const balancePromises: Promise<number>[] = [];
+
+      for (let i = 0; i < workspace.accounts.length; i++) {
+        const balance = connection.getBalance(workspace.accounts[i].keypair.publicKey);
+        balancePromises.push(balance);
+      }
+
+      Promise.all(balancePromises)
+        .then(responses => {
+          setBalances(responses);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
+  }
+
+  useEffect(() => {
+    updateAccounts();
+  }, []);
+
   return (
     <>
 
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box
+        sx={{ borderBottom: 1, borderColor: 'divider' }}
+        className='tabs-panel'
+        bgcolor={theme.palette.background.default}
+      >
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Workspace Active Accounts" {...a11yProps(0)} />
           <Tab label="Closed Accounts" {...a11yProps(0)} />
         </Tabs>
       </Box>
 
-      <TabPanel value={value} index={0}>
-        {accounts && (
-          <TableContainer>
+      <Box mt='23px'>
+        <TabPanel value={value} index={0}>
+          {workspace?.accounts && (
+            <TableContainer>
+              <Table size="medium">
+                <TableBody>
+                  {workspace.accounts.map((item, index) => (
+                    <TableRow hover key={item.keypair.publicKey.toString()} sx={{ height: "50px" }}>
+                      <TableCell align="center" width={1}>
+                        {/* {index + 1} */}
+                        <FiberManualRecordIcon fontSize="inherit" color="primary" />
+                      </TableCell>
 
-            <Table size="medium">
-              {/* <TableHead>
-              <TableRow>
-                <TableCell align="center">#</TableCell>
-                <TableCell align="left">PUBLIC KEY</TableCell>
-                <TableCell align="center">NATIVE BALANCE</TableCell>
-                <TableCell align="center">SPL ASSETS</TableCell>
-                <TableCell align="center">TXS</TableCell>
-                <TableCell align="right">ACTIONS</TableCell>
-              </TableRow>
-            </TableHead> */}
-              <TableBody>
-                {accounts.map((item, index) => (
-                  <TableRow hover key={item.keypair.publicKey.toString()} sx={{ height: "50px" }}>
-                    <TableCell align="center" width={1}>
-                      {/* {index + 1} */}
-                      <FiberManualRecordIcon fontSize="inherit" color="primary" />
-                    </TableCell>
+                      <TableCell align="left" className="key-item">
+                        <KeyItem index={index} account={item}/>
+                      </TableCell>
 
-                    <TableCell align="left" className="key-item">
-                      <KeyItem {...item} />
-                    </TableCell>
+                      <TableCell align="center">
+                        {balances[item.index - 1] ? `${balances[item.index - 1] / LAMPORTS_PER_SOL} SOL` : <Skeleton height={30} />}
+                      </TableCell>
 
-                    <TableCell align="center">
-                      0 SOL
-                    </TableCell>
+                      <TableCell align="center">
+                        <Skeleton height={30} />
+                      </TableCell>
 
-                    <TableCell align="center">
-                      NO ASSETS
-                    </TableCell>
+                      <TableCell align="center">
+                        <Skeleton height={30} />
+                      </TableCell>
 
-                    <TableCell align="center">
-                      0
-                    </TableCell>
+                      <TableCell align="right">
+                        <Stack
+                          direction="row"
+                          justifyContent="end"
+                        // spacing={1}
+                        >
+                          <Tooltip title="Quick Search" arrow placement="top" >
+                            <IconButton onClick={(event) => quickSearch(event, item.keypair)} color='primary'>
+                              <SearchIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
 
-                    <TableCell align="right">
-                      <Stack
-                        direction="row"
-                        justifyContent="end"
-                        spacing={2}
-                      >
-                        <Tooltip title="Add funds" arrow placement="top" >
-                          <OpacityIcon onClick={(event) => addFunds(event, item.keypair)} fontSize="small" sx={{ cursor: "pointer" }} />
-                        </Tooltip>
+                          <Tooltip title="Add funds" arrow placement="top" >
+                            <IconButton onClick={(event) => addFunds(event, item.keypair)} color='primary' >
+                              <OpacityIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
 
-                        <Tooltip title="Swap to Wallet" arrow placement="top" >
-                          <AccountBalanceWalletIcon onClick={(event) => swapToWallet(event, item.keypair)} fontSize="small" sx={{ cursor: "pointer" }} />
-                        </Tooltip>
+                          <Tooltip title="Swap to Wallet" arrow placement="top" >
+                            <IconButton onClick={(event) => swapToWallet(event, item.keypair)} color='primary'>
+                              <AccountBalanceWalletIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
 
-                        <Tooltip title="Show QR" arrow placement="top" >
-                          <QrCodeIcon onClick={(event) => handleQRClick(event, item.keypair)} fontSize="small" sx={{ cursor: "pointer" }} />
-                        </Tooltip>
+                          <Tooltip title="Show QR" arrow placement="top" >
+                            <IconButton onClick={(event) => handleQRClick(event, item.keypair)} color='primary'>
+                              <QrCodeIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
 
-                        <Tooltip title="Show Private key" arrow placement="top" >
-                          <KeyIcon onClick={(event) => showPrivateData(event, item.keypair)} fontSize="small" sx={{ cursor: "pointer" }} />
-                        </Tooltip>
+                          <Tooltip title="Show Private key" arrow placement="top" >
+                            <IconButton onClick={(event) => showPrivateData(event, item.keypair)} color='primary'>
+                              <KeyIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
 
-                        <Tooltip title="Save JSON file" arrow placement="top" >
-                          <FileDownloadIcon onClick={(event) => saveJsonFile(event, item.keypair)} fontSize="small" sx={{ cursor: "pointer" }} />
-                        </Tooltip>
+                          <Tooltip title="Save JSON file" arrow placement="top" >
+                            <IconButton onClick={(event) => saveJsonFile(event, item.keypair)} color='primary'>
+                              <FileDownloadIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
 
-                      </Stack>
-                    </TableCell>
+                        </Stack>
+                      </TableCell>
 
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
 
-          </TableContainer>
-        )}
-      </TabPanel>
+            </TableContainer>
+          )}
+        </TabPanel>
 
-      <TabPanel value={value} index={1}>
-        
-      </TabPanel>
+        <TabPanel value={value} index={1}>
 
+        </TabPanel>
+      </Box>
 
 
       <Dialog
