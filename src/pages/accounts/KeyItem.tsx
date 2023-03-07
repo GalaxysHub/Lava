@@ -63,7 +63,7 @@ export default function KeyItem(props: AccountItemProps) {
               <Box component={'span'} color={theme.palette.primary.main} fontWeight='700' >{account.alias}</Box>
             </>
             :
-            `Workspace Program #${index + 1}`
+            `Account Program #${index + 1}`
           }
           <Tooltip title="Edit alias" arrow placement="right" >
             <EditIcon className="edit-btn" onClick={(event) => handleEditAliaslick(event, account.keypair)} fontSize="inherit" sx={{ cursor: "pointer", ml: '5px' }} />
