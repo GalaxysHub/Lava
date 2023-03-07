@@ -72,7 +72,7 @@ export default function ProgramItem(props: ProgranItemProps) {
         <Box>
           <Link
             component={NavLink}
-            to={`/accounts/${program.account.publicKey.toString()}`}
+            to={`/programs/${program.account.publicKey.toString()}`}
             color={theme.palette.text.primary}
           >
             {program.account.publicKey.toString()}
