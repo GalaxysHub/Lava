@@ -92,7 +92,7 @@ export default function ProgramListPage() {
 
                       <TableCell align="center" width={1}>
                         <Tooltip title="Quick Search" arrow placement="top" >
-                          <IconButton component={NavLink} to={`/programs/${item.account.publicKey.toString()}`} color='primary' size="small">
+                          <IconButton component={NavLink} to={`/accounts/${item.account.publicKey.toString()}`} color='primary' size="small">
                             <RemoveRedEyeIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
