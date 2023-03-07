@@ -56,7 +56,9 @@ export default function TransactionDetailsPage() {
             </Box>
             <Box>
               <CopyToClipboard textToCopy={account.pubkey.toBase58()} notification='snackbar' />
-              {account.pubkey.toBase58()}
+              <Link component={NavLink} to={`/accounts/${account.pubkey.toBase58()}`} color={theme.palette.secondary.main}>
+                {account.pubkey.toBase58()}
+              </Link>
             </Box>
           </Box>
         </Box>
