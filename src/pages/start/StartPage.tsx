@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, useTheme } from "@mui/material"
+import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, useTheme } from "@mui/material"
 import QuickStart from "./QuickStart";
 import OpenWorkspace from "./OpenWorkspace";
 import CustomWorkspace from "./CustomWorkspace";
@@ -29,6 +29,21 @@ export default function StartPage() {
 
         <Box my={1} >
           <QuickStart />
+        </Box>
+
+        <Box mt={4}>
+          <FormControl>
+            <FormLabel id="row-radio-buttons-group-label">Validator Node Type:</FormLabel>
+            <RadioGroup
+              row
+              defaultValue="lava"
+              aria-labelledby="row-radio-buttons-group-label"
+              name="row-radio-buttons-group"
+            >
+              <FormControlLabel value="lava" control={<Radio size="small"/>} label="Lava Embeded" />
+              <FormControlLabel value="solana" control={<Radio size="small"/>} label="Solana CLI" />
+            </RadioGroup>
+          </FormControl>
         </Box>
 
       </Box>
