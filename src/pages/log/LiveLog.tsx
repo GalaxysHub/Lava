@@ -18,7 +18,7 @@ export default function LiveLog() {
   const handleChangeGrepVariant = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGrepVariant(event.target.value);
   };
-  const handleGrepApply = () => {
+  const handleGrepApply = (event: React.FormEvent<HTMLButtonElement>) => {
     const request = {} // TODO
     
     if (grepVariant !== 'grep') {
@@ -121,6 +121,7 @@ export default function LiveLog() {
               }}
             >
               <InputBase
+                autoComplete="off"
                 disabled={grepVariant !== 'grep'}
                 value={grepString}
                 id="search-input"
