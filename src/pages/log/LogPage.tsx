@@ -1,5 +1,7 @@
 import { Box, Grid, Tab, Tabs, useTheme } from "@mui/material"
 import React from "react"
+import LiveLog from "./LiveLog";
+import LogSearch from "./LogSearch";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -52,18 +54,18 @@ export default function LogPage() {
         bgcolor={theme.palette.background.default}
       >
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Live Log" {...a11yProps(0)} />
+          <Tab label="Validator Log" {...a11yProps(0)} />
           <Tab label="Search in Log" {...a11yProps(1)} />
         </Tabs>
       </Box>
 
       <Box mt='30px'>
         <TabPanel value={value} index={0}>
-          Log items
+          <LiveLog />
         </TabPanel>
 
         <TabPanel value={value} index={1}>
-          Log search
+          <LogSearch />
         </TabPanel>
       </Box>
 
