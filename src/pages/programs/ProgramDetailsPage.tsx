@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Box, Chip, Grid, Link, Skeleton, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, useTheme } from "@mui/material"
-import { Connection, LAMPORTS_PER_SOL, ParsedAccountsModeBlockResponse, ParsedBlockResponse, ParsedMessageAccount } from "@solana/web3.js";
-import { NavLink, useParams } from "react-router-dom";
+import { Box, Button, Chip, Grid, Link, Skeleton, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Tooltip, useTheme } from "@mui/material"
+import { AccountInfo, ConfirmedSignatureInfo, Connection, LAMPORTS_PER_SOL, ParsedAccountData, ParsedAccountsModeBlockResponse, ParsedBlockResponse, ParsedMessageAccount, PublicKey, RpcResponseAndContext } from "@solana/web3.js";
+import { NavLink, useParams, Link as RouterLink } from "react-router-dom";
 import { CopyToClipboard } from "../../components/helpers/CopyToClipBoard";
 import JsonView from "../../components/helpers/JsonView";
 import { AppContext } from "../../context/main";
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { minimizeStr, timeConverter, timeSince } from "../../utils/helper";
-
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { formatBytes, minimizeStr, timeConverter, timeSince } from "../../utils/helper";
+import ProgramTestTab from "./ProgramTestTab";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -21,7 +22,6 @@ export default function ProgramDetailsPage() {
   const params = useParams();
   const theme = useTheme();
   const { workspace } = useContext(AppContext);
-
 
   function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
@@ -50,56 +50,46 @@ export default function ProgramDetailsPage() {
     };
   }
 
-
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-
   return (
     <>
+      <Box
+        sx={{ borderBottom: 1, borderColor: 'divider' }}
+        className='tabs-panel'
+        bgcolor={theme.palette.background.default}
+      >
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab label="Program Overview" {...a11yProps(0)} />
+          <Tab label="Testing" {...a11yProps(1)} />
+          <Tab label="TAB 3" {...a11yProps(2)} />
+        </Tabs>
+      </Box>
 
-      <Grid container spacing={4}>
+      <Box mt='30px'>
+        <TabPanel value={value} index={0}>
+          Program Owerview
+          {params.programId}
+        </TabPanel>
 
-        <Grid item sm={6}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Box
-              p={1}
-            // sx={{ borderBottom: 2, borderColor: `${theme.palette.primary.main}` }}
-            >
-              <Box className='page-header'>Program Details</Box>
-            </Box>
-          </Box>
+        <TabPanel value={value} index={1}>
+          <ProgramTestTab programPubkeyStr={params.programId}/>
+        </TabPanel>
 
-          <Box>
-            {params.programId}
-          </Box>
+        <TabPanel value={value} index={2}>
+          Tab 3
+        </TabPanel>
+      </Box>
 
 
-        </Grid>
+      <Box className="tab-button-group">
 
-        <Grid item sm={6}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs">
-              <Tab label="Tab 1" {...a11yProps(0)} />
-              <Tab label="JSON View" {...a11yProps(1)} />
-            </Tabs>
-          </Box>
+      </Box>
 
-          <Box style={{ maxHeight: '80vh', overflow: 'auto' }}>
-            <TabPanel value={value} index={0}>
-   
-            </TabPanel>
-
-            <TabPanel value={value} index={1}>
-              
-            </TabPanel>
-          </Box>
-
-        </Grid>
-      </Grid>
 
     </>
   )
