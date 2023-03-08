@@ -36,7 +36,6 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
       // Name of the component
       MuiLink: {
         styleOverrides: {
-          // Name of the slot
           root: {
             transition: 'all 0.3s',
             textDecoration: 'none',
@@ -49,16 +48,10 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
       },
       MuiButton: {
         styleOverrides: {
-          // Name of the slot
           root: {
-            // backgroundColor: '#64bdac',
             transition: 'all 0.3s',
-            // borderRadius: '14px',
-            // color: '#ddd',
             textDecoration: 'none',
-            // Some CSS
             '&:hover': {
-
             },
           },
         },
