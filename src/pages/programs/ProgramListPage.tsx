@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react"
-import { Box, Button, Grid, IconButton, Skeleton, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Tooltip, useTheme } from "@mui/material"
+import { Box, Button, Fab, Grid, IconButton, Skeleton, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Tooltip, useTheme } from "@mui/material"
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import AddIcon from '@mui/icons-material/Add';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import DeployProgram from "./DeployProgram";
 import { AppContext } from "../../context/main";
@@ -11,6 +12,7 @@ import { TProgram } from "../../libs/types";
 import ProgramItem from "./ProgramItem";
 import { NavLink } from "react-router-dom";
 import AddProject from "./AddProject";
+import AddProgramFromCluster from "./AddProgramFromCluster";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -142,10 +144,16 @@ export default function ProgramListPage() {
         </TabPanel>
       </Box>
 
-      <Box className="tab-button-group">
-        <DeployProgram />
-        {/* <AddProject /> */}
-      </Box>
+      {workspace?.isLocalnet
+        ?
+        <Box className="tab-button-group">
+          <DeployProgram />
+        </Box>
+        :
+        <Box className="tab-button-group">
+          <AddProgramFromCluster />
+        </Box>
+      }
 
     </>
   )
