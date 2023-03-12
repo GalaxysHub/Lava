@@ -132,3 +132,24 @@ export const formatBytes = (bytes: number, decimals = 2) => {
 }
 
 export const isNumeric = (num: any) => (typeof (num) === 'number' || typeof (num) === "string" && num.trim() !== '') && !isNaN(num as number);
+
+export const getAnchorTypeLength = (type: string): number => {
+  switch (type) {
+    case 'publicKey':
+      return 32;
+    case 'u128':
+      return 16;
+    case 'u64':
+      return 8;
+    case 'u32':
+      return 4;
+    case 'u16':
+      return 2;
+    case 'u8':
+      return 1;
+    case 'bool':
+      return 1;
+    default:
+      return 8;
+  }
+}
