@@ -54,7 +54,7 @@ export const numberWithSpaces = (x: number) => {
 // Helper for getting a str of time since date
 export const timeSince = (timestamp: number | null | undefined) => {
   if (!timestamp) return undefined;
-  
+
   let eventDate = new Date(timestamp * 1000);
   // console.log(eventDate)
   let now = new Date()
@@ -131,4 +131,4 @@ export const formatBytes = (bytes: number, decimals = 2) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-export const isNumeric = (num: any) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num as number);
+export const isNumeric = (num: any) => (typeof (num) === 'number' || typeof (num) === "string" && num.trim() !== '') && !isNaN(num as number);
