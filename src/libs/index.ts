@@ -1,6 +1,6 @@
 import * as web3 from "@solana/web3.js";
 import * as bip39 from 'bip39';
-import { TAccount, TProgram, TExplorerSettings, TLogSettings } from "./types";
+import { TAccount, TProgram, TExplorerSettings, TLogSettings, TCluster } from "./types";
 
 
 export class Workspace {
@@ -12,17 +12,19 @@ export class Workspace {
   validator: Validator
   mint: web3.Keypair
   accounts?: TAccount[]
-  programs: TProgram[]
+  cluster: TCluster;
+  programs: Record<string, TProgram>
   expolorerSettings: TExplorerSettings
   logSettings: TLogSettings
   initialTxsSignatures: string[]
 
-  constructor(validator: Validator, programs: TProgram[]) {
+  constructor(validator: Validator, programs: Record<string, TProgram>) {
     this.id = Workspace.generateID();
     this.name = '';
     this.description = '';
     this.created = new Date();
     this.validator = validator;
+    this.cluster = { name: 'localnet', endpoint: validator.RpcUrl };
     this.mint = Workspace.mint()
     this.accounts = Workspace.generateAccounts(10);
     this.programs = programs;
@@ -97,7 +99,11 @@ export class Workspace {
   };
 
   get RPC() {
-    return this.validator.RpcUrl
+    if (this.cluster.name === 'localnet') {
+      return this.validator.RpcUrl;
+    } else {
+      return this.cluster.endpoint;
+    }
   }
 
   get validatorStatus() {
