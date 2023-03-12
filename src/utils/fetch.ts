@@ -2,10 +2,11 @@ import * as web3 from "@solana/web3.js";
 import { TAccount } from "../libs/types";
 
 export const getTransaction = (
+  cluster: string,
   signature: string,
   rawConfig?: web3.GetTransactionConfig | undefined
 ): Promise<web3.TransactionResponse | null> => {
-  const connection = new web3.Connection("http://localhost:8899", "confirmed");
+  const connection = new web3.Connection(cluster, "confirmed");
 
   const transaction = connection.getTransaction(signature, rawConfig);
 
@@ -13,6 +14,7 @@ export const getTransaction = (
 };
 
 export const getTransactions = (
+  cluster: string,
   signature: string,
   rawConfig?: web3.GetTransactionConfig | undefined
 ): Promise<web3.TransactionResponse | null> => {
@@ -26,8 +28,8 @@ export const getTransactions = (
   return transactions;
 };
 
-export const initialAirdrop = async (accounts: TAccount[], initialSolAmount = 10) => {
-  const connection = new web3.Connection("http://localhost:8899", "confirmed");
+export const initialAirdrop = async (cluster: string, accounts: TAccount[], initialSolAmount = 10) => {
+  const connection = new web3.Connection(cluster, "confirmed");
 
   const signatures: string[] = [];
 
@@ -40,7 +42,7 @@ export const initialAirdrop = async (accounts: TAccount[], initialSolAmount = 10
   return signatures;
 };
 
-export const searchTxByAccount = (pubkeyStr: string) => {
+export const searchTxByAccount = (cluster: string, pubkeyStr: string) => {
   let pubkey: web3.PublicKey;
 
   try {
@@ -50,7 +52,7 @@ export const searchTxByAccount = (pubkeyStr: string) => {
     return undefined
   }
 
-  const connection = new web3.Connection("http://localhost:8899", "confirmed");
+  const connection = new web3.Connection(cluster, "confirmed");
   const promise = connection.getSignaturesForAddress(pubkey);
 
   return promise;
@@ -58,8 +60,8 @@ export const searchTxByAccount = (pubkeyStr: string) => {
 
 
 
-export const searchBlock = (slot: number) => {
-  const connection = new web3.Connection("http://localhost:8899", "confirmed");
+export const searchBlock = (cluster: string, slot: number) => {
+  const connection = new web3.Connection(cluster, "confirmed");
   const promise = connection.getBlock(slot);
 
   return promise;
