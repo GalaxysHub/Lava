@@ -4,11 +4,13 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import BugReportIcon from '@mui/icons-material/BugReport';
 import DeployProgram from "./DeployProgram";
 import { AppContext } from "../../context/main";
 import { TProgram } from "../../libs/types";
 import ProgramItem from "./ProgramItem";
 import { NavLink } from "react-router-dom";
+import AddProject from "./AddProject";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,7 +74,7 @@ export default function ProgramListPage() {
 
       <Box mt='30px'>
         <TabPanel value={value} index={0}>
-          {workspace?.programs && workspace.programs.length > 0 && (
+          {workspace?.programs && (
             <TableContainer>
               <Table size="medium">
 
@@ -87,19 +89,19 @@ export default function ProgramListPage() {
                 </TableHead>
 
                 <TableBody>
-                  {workspace?.programs?.map((item, index) => (
-                    <TableRow hover key={item.account.publicKey.toString()} sx={{ height: "50px" }}>
+                  {Object.keys(workspace?.programs).map((key, index) => (
+                    <TableRow hover key={workspace.programs[key].account.publicKey.toString()} sx={{ height: "50px" }}>
 
                       <TableCell align="center" width={1}>
-                        <Tooltip title="Quick Search" arrow placement="top" >
-                          <IconButton component={NavLink} to={`/programs/${item.account.publicKey.toString()}`} color='primary' size="small">
-                            <RemoveRedEyeIcon fontSize="small" />
+                        <Tooltip title="Try it!" arrow placement="top" >
+                          <IconButton component={NavLink} to={`/programs/${workspace.programs[key].account.publicKey.toString()}`} color='primary' size="small">
+                            <BugReportIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
                       </TableCell>
 
                       <TableCell align="left" className="key-item">
-                        <ProgramItem index={index} program={item} />
+                        <ProgramItem index={index} program={workspace.programs[key]} />
                       </TableCell>
 
                       <TableCell align="center">
@@ -142,6 +144,7 @@ export default function ProgramListPage() {
 
       <Box className="tab-button-group">
         <DeployProgram />
+        {/* <AddProject /> */}
       </Box>
 
     </>
