@@ -147,9 +147,7 @@ export default function Nav() {
 
             <Box className="side-menu-item">
               <Tooltip title="Wallet" arrow placement="right" >
-                <IconButton component={NavLink} to="wallet/" color='primary'>
-                  <AccountBalanceWalletIcon fontSize="medium" />
-                </IconButton>
+                <Wallet />
               </Tooltip>
             </Box>
 
@@ -192,8 +190,6 @@ export default function Nav() {
 
 
       </Box>
-
-      <Wallet />
     </>
   )
 
