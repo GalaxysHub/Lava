@@ -132,7 +132,7 @@ export default function AccountDetailsPage() {
 
             <TableContainer>
 
-              <Table size="medium">
+              <Table size="medium" className="table-striped">
                 <TableHead>
                   <TableRow>
                     <TableCell align="left" colSpan={2}>
@@ -245,7 +245,7 @@ export default function AccountDetailsPage() {
                   {accountTxs && (
                     <TableContainer>
 
-                      <Table size="small">
+                      <Table size="small" className="table-striped">
                         <TableHead>
                           <TableRow>
                             <TableCell align="center">SLOT</TableCell>
