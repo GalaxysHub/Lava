@@ -22,7 +22,6 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import CodeIcon from '@mui/icons-material/Code';
-import { Account } from '@solana/web3.js';
 
 
 type TSearchResult = {
@@ -38,7 +37,7 @@ export default function Search() {
 
   const theme = useTheme();
 
-  const { quickSearch, setQuickSearch } = useContext(AppContext);
+  const { workspace, quickSearch, setQuickSearch } = useContext(AppContext);
 
   const [searchResults, setSearchResults] = useState<TSearchResult[]>([]);
 
@@ -73,7 +72,7 @@ export default function Search() {
 
     if (decoded.length === 64) {
 
-      getTransaction(searchString)
+      getTransaction(workspace?.cluster.endpoint!, searchString)
         .then((data) => {
           console.log(data);
           if (data) {
@@ -94,7 +93,7 @@ export default function Search() {
 
     } else if (decoded.length === 32) {
       // search accounts inside transactions 
-      searchTxByAccount(searchString)?.then((data) => {
+      searchTxByAccount(workspace?.cluster.endpoint!, searchString)?.then((data) => {
         if (data) {
           data.forEach(tx => {
             arr.push(
@@ -115,7 +114,7 @@ export default function Search() {
         });
     } else if (isNumeric(searchString)) {
       // Block search
-      searchBlock(Number(searchString))?.then((data) => {
+      searchBlock(workspace?.cluster.endpoint!, Number(searchString))?.then((data) => {
         if (data) {
           arr.push(
             {
