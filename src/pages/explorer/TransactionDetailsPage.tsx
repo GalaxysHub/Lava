@@ -224,7 +224,7 @@ export default function TransactionDetailsPage() {
 
             <TableContainer>
 
-              <Table size="medium">
+              <Table size="medium" className="table-striped">
                 <TableHead>
                   <TableRow>
                     <TableCell align="left" colSpan={2}>
