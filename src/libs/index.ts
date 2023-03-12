@@ -110,6 +110,10 @@ export class Workspace {
     return this.validator.process !== undefined;
   }
 
+  get isLocalnet() {
+    return this.cluster.name === 'localnet';
+  }
+
 }
 
 export class Validator {
