@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { Box, IconButton, Popover, Tooltip, useTheme } from "@mui/material"
+import { Box, Dialog, DialogContent, IconButton, Popover, Tooltip, useTheme } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StopIcon from '@mui/icons-material/Stop';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -9,8 +9,10 @@ import Blinker from "../helpers/Blinker";
 export default function NodeBlock() {
 
   const theme = useTheme();
-  
+
   const { workspace } = useContext(AppContext);
+
+  const [open, setOpen] = useState(false);
 
   const [nodeStatus, setNodeStatus] = useState(true)
 
@@ -21,10 +23,8 @@ export default function NodeBlock() {
     txCount: 0,
   })
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
-
   const handleNodeClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setAnchorEl(event.currentTarget);
+    setOpen(true);
   }
 
   const handleStopClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -41,12 +41,10 @@ export default function NodeBlock() {
     }
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  // Dialog
+  const handleDialogClose = () => {
+    setOpen(false);
   };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
 
   return (
     <>
@@ -66,43 +64,6 @@ export default function NodeBlock() {
           <ExpandMoreIcon fontSize='medium' />
         </Box>
       </Tooltip>
-
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Box m={'20px'}>
-          <Box>
-            <span>RPC:</span>
-            <span>{workspace?.validator.hostname}:{workspace?.validator.rpcPort}</span>
-          </Box>
-
-          <Box>
-            <span>Epoch:</span>
-            <span>{data.currentEpoch}</span>
-          </Box>
-
-          <Box>
-            <span>Slots:</span>
-            <span>{data.currentBlock}</span>
-          </Box>
-
-          <Box>
-            <span>Txs:</span>
-            <span>{data.txCount}</span>
-          </Box>
-        </Box>
-      </Popover>
 
       <Tooltip title="Stop Validator node" arrow placement="bottom" >
         <IconButton
@@ -125,6 +86,46 @@ export default function NodeBlock() {
         </IconButton>
       </Tooltip>
 
+      <Dialog
+        fullWidth
+        maxWidth='sm'
+        open={open}
+        onClose={handleDialogClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogContent >
+          <Box>
+            <Box>
+              <Box m={'20px'}>
+                <Box>
+                  <span>RPC:</span>
+                  <span>{workspace?.validator.hostname}:{workspace?.validator.rpcPort}</span>
+                </Box>
+
+                <Box>
+                  <span>Epoch:</span>
+                  <span>{data.currentEpoch}</span>
+                </Box>
+
+                <Box>
+                  <span>Slots:</span>
+                  <span>{data.currentBlock}</span>
+                </Box>
+
+                <Box>
+                  <span>Txs:</span>
+                  <span>{data.txCount}</span>
+                </Box>
+              </Box>
+            </Box>
+
+            <Box>
+
+            </Box>
+          </Box>
+        </DialogContent>
+
+      </Dialog>
     </>
   )
 
