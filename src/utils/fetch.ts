@@ -18,10 +18,7 @@ export const getTransactions = (
   signature: string,
   rawConfig?: web3.GetTransactionConfig | undefined
 ): Promise<web3.TransactionResponse | null> => {
-  const connection = new web3.Connection(
-    web3.clusterApiUrl("devnet"),
-    "confirmed"
-  );
+  const connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
   const transactions = connection.getTransaction(signature, rawConfig);
 
@@ -42,7 +39,7 @@ export const initialAirdrop = async (cluster: string, accounts: TAccount[], init
   return signatures;
 };
 
-export const searchTxByAccount = (cluster: string, pubkeyStr: string) => {
+export const searchTxByAccount = (cluster: string, pubkeyStr: string, limit=20) => {
   let pubkey: web3.PublicKey;
 
   try {
@@ -53,7 +50,7 @@ export const searchTxByAccount = (cluster: string, pubkeyStr: string) => {
   }
 
   const connection = new web3.Connection(cluster, "confirmed");
-  const promise = connection.getSignaturesForAddress(pubkey);
+  const promise = connection.getSignaturesForAddress(pubkey, {limit: limit});
 
   return promise;
 };
