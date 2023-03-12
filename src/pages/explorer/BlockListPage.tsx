@@ -128,6 +128,7 @@ export default function BlockListPage() {
             size="small"
             stickyHeader
             aria-label="sticky table"
+            className="table-striped"
           >
             <TableHead>
               <TableRow>
