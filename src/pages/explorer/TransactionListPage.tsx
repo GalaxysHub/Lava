@@ -168,7 +168,7 @@ export default function TransactionListPage() {
       {txs && (
         <TableContainer>
 
-          <Table size="small">
+          <Table size="small" className="table-striped">
             <TableHead>
               <TableRow>
                 <TableCell align="center">ACCOUNT</TableCell>
