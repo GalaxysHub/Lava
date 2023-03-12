@@ -1,5 +1,4 @@
 import { Keypair, PublicKey } from "@solana/web3.js";
-import { TypeDefaultValue } from "react-json-view";
 
 export type TAccount = {
   index: number;
@@ -16,6 +15,7 @@ export type TProgram = {
   initialTxs: string[],
   projectPath?: string,
   idl?: object,
+  cluster: TCluster,
   pdas: Record<string, [PublicKey, number]>;
 }
 
