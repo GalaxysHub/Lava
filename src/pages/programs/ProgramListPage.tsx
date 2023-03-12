@@ -69,8 +69,10 @@ export default function ProgramListPage() {
         bgcolor={theme.palette.background.default}
       >
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Workspace Programs" {...a11yProps(0)} />
-          <Tab label="Program Library" {...a11yProps(0)} />
+          <Tab label={`Workspace Programs (${workspace?.cluster.name})`} {...a11yProps(0)} />
+          {workspace?.isLocalnet &&
+            <Tab label="Program Library" {...a11yProps(0)} />
+          }
         </Tabs>
       </Box>
 
@@ -139,9 +141,11 @@ export default function ProgramListPage() {
           )}
         </TabPanel>
 
-        <TabPanel value={value} index={1}>
-          Program Library List
-        </TabPanel>
+        {workspace?.isLocalnet &&
+          <TabPanel value={value} index={1}>
+            Program Library List
+          </TabPanel>
+        }
       </Box>
 
       {workspace?.isLocalnet
