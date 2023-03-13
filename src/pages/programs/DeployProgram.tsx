@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useContext, useEffect, useState } from "react"
-import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, IconButton, Radio, RadioGroup, TextField, Typography, useTheme } from "@mui/material"
+import { Box, Button, Dialog, DialogContent, DialogTitle, Fab, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, IconButton, Radio, RadioGroup, TextField, Typography, useTheme } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { formatBytes } from "../../utils/helper";
@@ -41,7 +42,7 @@ export default function DeployProgram() {
     setSelectedFile(null)
   }
 
-  const deployProgram = (event: React.MouseEvent<HTMLElement>, value?: any) => {
+  const addProgram = (event: React.MouseEvent<HTMLElement>, value?: any) => {
     // Show loader
     setOpen(true);
 
@@ -79,15 +80,17 @@ export default function DeployProgram() {
             if (result) {
               //Add new program to Workspace object
               let newWorkspace = Object.assign(Object.create(Object.getPrototypeOf(workspace)), workspace);
-              newWorkspace.programs?.push(
-                {
-                  alias: '',
-                  account: programAccount,
-                  initialTxs: []
-                }
-              );
+              newWorkspace.programs[programAccount.publicKey.toString()] =
+              {
+                alias: '',
+                pubkey: programAccount.publicKey,
+                account: programAccount,
+                initialTxs: [],
+                pdas: {},
+              }
+
               setWorkspace(newWorkspace);
-              console.log(newWorkspace);
+              // console.log(newWorkspace);
 
               handleDialogClose();
             }
@@ -99,13 +102,13 @@ export default function DeployProgram() {
   return (
     <>
 
-      <Button
-        onClick={deployProgram}
-        variant="contained"
-        startIcon={<PostAddIcon />}
+      <Fab
+        color="primary"
+        aria-label="Add program"
+        onClick={addProgram}
       >
-        Deploy Program
-      </Button>
+        <AddIcon />
+      </Fab>
 
       <Dialog
         fullWidth
