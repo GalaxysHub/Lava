@@ -10,7 +10,6 @@ export type TAcoountProgramRelation = {
 }
 
 export type TAccount = {
-  index: number;
   alias: string,
   mnemonic: string,
   keypair: Keypair,
