@@ -14,6 +14,7 @@ export type TAccount = {
   mnemonic: string,
   keypair: Keypair,
   relations?: TAcoountProgramRelation[],
+  main: boolean,
 }
 
 export type TProgram = {
