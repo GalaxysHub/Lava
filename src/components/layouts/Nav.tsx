@@ -138,14 +138,6 @@ export default function Nav() {
             </Box>
 
             <Box className="side-menu-item">
-              <Tooltip title="Faucet" arrow placement="right" >
-                <IconButton component={NavLink} to="faucet/" color='primary'>
-                  <OpacityIcon fontSize="medium" />
-                </IconButton>
-              </Tooltip>
-            </Box>
-
-            <Box className="side-menu-item">
               <Tooltip title="Wallet" arrow placement="right" >
                 <Wallet />
               </Tooltip>
