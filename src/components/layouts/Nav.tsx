@@ -177,6 +177,14 @@ export default function Nav() {
                 </IconButton>
               </Tooltip>
             </Box>
+
+            <Box className="side-menu-item">
+              <Tooltip title="Lava GitHub" arrow placement="right" >
+                <IconButton color='primary'>
+                  <GitHubIcon fontSize="medium" sx={{ fontSize: '1.4rem' }} />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
         </Box>
 
