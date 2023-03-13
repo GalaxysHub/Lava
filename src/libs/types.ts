@@ -1,20 +1,30 @@
 import { Keypair, PublicKey } from "@solana/web3.js";
+import { TAnchorIDL } from "./anchor";
+
+export type TAcoountRelation = {
+  instruction: [string, number] 
+}
+
+export type TAcoountProgramRelation = {
+  program: Record<string, TAcoountRelation[]>
+}
 
 export type TAccount = {
   index: number;
   alias: string,
   mnemonic: string,
   keypair: Keypair,
-  balance: number,
-  txsCount: number,
+  relations?: TAcoountProgramRelation[],
 }
 
 export type TProgram = {
   alias: string,
-  account: Keypair,
+  pubkey: PublicKey,
+  account?: Keypair,
   initialTxs: string[],
   projectPath?: string,
-  idl?: object,
+  size?: number,
+  idl?: TAnchorIDL,
   cluster: TCluster,
   pdas: Record<string, [PublicKey, number]>;
 }
