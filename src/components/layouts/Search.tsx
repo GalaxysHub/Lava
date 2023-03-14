@@ -22,6 +22,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import CodeIcon from '@mui/icons-material/Code';
+import LinearProgress from '@mui/material/LinearProgress';
 
 
 type TSearchResult = {
@@ -38,6 +39,8 @@ export default function Search() {
   const theme = useTheme();
 
   const { workspace, quickSearch, setQuickSearch } = useContext(AppContext);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [searchResults, setSearchResults] = useState<TSearchResult[]>([]);
 
@@ -63,6 +66,15 @@ export default function Search() {
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setIsLoading(false);
+
+    if (searchString === '') {
+      return null;
+    }
+
+    setIsLoading(true);
+
     setAnchorEl(event.currentTarget);
 
     setSearchResults([]);
@@ -74,7 +86,8 @@ export default function Search() {
 
       getTransaction(workspace?.cluster.endpoint!, searchString)
         .then((data) => {
-          console.log(data);
+          // console.log(data);
+          setIsLoading(false);
           if (data) {
             arr.push(
               {
@@ -88,12 +101,14 @@ export default function Search() {
           }
         })
         .catch((error) => {
-          console.log(error);
+          setIsLoading(false);
+          // console.log(error);
         });
 
     } else if (decoded.length === 32) {
       // search accounts inside transactions 
       searchTxByAccount(workspace?.cluster.endpoint!, searchString)?.then((data) => {
+        setIsLoading(false);
         if (data) {
           data.forEach(tx => {
             arr.push(
@@ -110,11 +125,13 @@ export default function Search() {
         }
       })
         .catch((error) => {
-          console.log(error);
+          setIsLoading(false);
+          // console.log(error);
         });
     } else if (isNumeric(searchString)) {
       // Block search
       searchBlock(workspace?.cluster.endpoint!, Number(searchString))?.then((data) => {
+        setIsLoading(false);
         if (data) {
           arr.push(
             {
@@ -128,7 +145,8 @@ export default function Search() {
         setSearchResults(arr)
       })
         .catch((error) => {
-          console.log(error);
+          setIsLoading(false);
+          // console.log(error);
         });
     }
 
@@ -267,9 +285,9 @@ export default function Search() {
               disabled
             >
               <ListItemText>
-                {/* <Typography variant="body2" color="secondary.main"> */}
-                No Results Found.
-                {/* </Typography> */}
+                <Box textTransform={'uppercase'}>
+                  {isLoading ? <><LinearProgress /></> : 'No Results Found.'}
+                </Box>
               </ListItemText>
             </MenuItem>
           }
