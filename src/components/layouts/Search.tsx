@@ -192,7 +192,7 @@ export default function Search() {
             p: '0px 4px',
             display: 'flex',
             alignItems: 'center',
-            border: `1px solid ${theme.palette.secondary.main}`,
+            border: `1px solid ${theme.palette.primary.main}`,
             borderRadius: '8px'
           }}
         >

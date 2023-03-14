@@ -49,7 +49,7 @@ export default function Wallet() {
         open={open}
         onClose={toggleDrawer(false)}
         onOpen={toggleDrawer(true)}
-        PaperProps={{ sx: { backgroundColor: `${theme.palette.primary.dark}` } }}
+        PaperProps={{ sx: { backgroundColor: `#333` } }}
       >
         <Box
           minWidth={'500px'}

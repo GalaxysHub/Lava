@@ -73,7 +73,9 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
           border: '#444',
         }),
       primary: {
-        main: '#64bdac',
+        main: '#fabe56',
+        light: '#fdcd3a',
+        dark: '#f77021'
       },
       secondary: {
         light: '#333',
