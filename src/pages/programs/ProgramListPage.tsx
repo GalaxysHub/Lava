@@ -5,6 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import DeployProgram from "./DeployProgram";
 import { AppContext } from "../../context/main";
@@ -13,6 +14,7 @@ import ProgramItem from "./ProgramItem";
 import { NavLink } from "react-router-dom";
 import AddProject from "./AddProject";
 import AddProgramFromCluster from "./AddProgramFromCluster";
+import { formatBytes } from "../../utils/helper";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -87,18 +89,20 @@ export default function ProgramListPage() {
                     <TableCell align="center"><MoreHorizIcon fontSize="inherit" /></TableCell>
                     <TableCell align="left">INFO</TableCell>
                     <TableCell align="center">Size</TableCell>
-                    <TableCell align="center">TXS</TableCell>
-                    <TableCell align="right">Search</TableCell>
+                    <TableCell align="center">Instructions</TableCell>
+                    <TableCell align="right"><MoreHorizIcon fontSize="inherit" sx={{ mx: 1.5 }} /></TableCell>
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
-                  {Object.keys(workspace?.programs).map((key, index) => (
-                    <TableRow hover key={workspace.programs[key].account.publicKey.toString()} sx={{ height: "50px" }}>
+                  {Object.keys(workspace?.programs).map((key, index) => 
+                    (workspace.programs[key].cluster.name === workspace.cluster.name) &&
+
+                    <TableRow hover key={key} sx={{ height: "50px" }}>
 
                       <TableCell align="center" width={1}>
                         <Tooltip title="Try it!" arrow placement="top" >
-                          <IconButton component={NavLink} to={`/programs/${workspace.programs[key].account.publicKey.toString()}`} color='primary' size="small">
+                          <IconButton component={NavLink} to={`/programs/${key}`} color='primary' size="small">
                             <BugReportIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
@@ -109,31 +113,30 @@ export default function ProgramListPage() {
                       </TableCell>
 
                       <TableCell align="center">
-                        <Skeleton height={30} />
+                      {workspace.programs[key].size ? formatBytes(workspace.programs[key].size!) : <Skeleton height={30} />}
                       </TableCell>
 
                       <TableCell align="center">
-                        <Skeleton height={30} />
+                        {workspace.programs[key].idl?.instructions.length
+                          ?
+                          workspace.programs[key].idl?.instructions.length
+                          :
+                          <Skeleton height={30} />
+                        }
                       </TableCell>
 
-                      <TableCell align="center">
-                        <Stack
-                          direction="row"
-                          justifyContent="end"
-                        // spacing={1}
-                        >
-                          <Tooltip title="Quick Search" arrow placement="top" >
-                            <IconButton color='primary'>
-                              <SearchIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
+                      <TableCell align="right">
 
+                        <Tooltip title="Delete" arrow placement="top" >
+                          <IconButton color='primary'>
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
 
-                        </Stack>
                       </TableCell>
 
                     </TableRow>
-                  ))}
+                  )}
                 </TableBody>
               </Table>
 
