@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react"
 import { AppContext } from "../../context/main";
 import { Box, Dialog, DialogContent, FormControl, IconButton, Input, InputAdornment, InputLabel, Link, OutlinedInput, TextField, Tooltip, useTheme } from "@mui/material"
 import { TProgram } from "../../libs/types"
-import { Keypair } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
 import EditIcon from '@mui/icons-material/Edit';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { CopyToClipboard } from "../../components/helpers/CopyToClipBoard";
@@ -28,7 +28,7 @@ export default function ProgramItem(props: ProgranItemProps) {
     setDialogOpen(false);
   };
 
-  const handleEditAliaslick = (event: React.MouseEvent<SVGSVGElement>, value: Keypair) => {
+  const handleEditAliaslick = (event: React.MouseEvent<SVGSVGElement>, value: PublicKey) => {
     setDialogOpen(true);
   }
 
@@ -66,18 +66,18 @@ export default function ProgramItem(props: ProgranItemProps) {
             `Workspace Program #${index + 1}`
           }
           <Tooltip title="Edit alias" arrow placement="right" >
-            <EditIcon className="edit-btn" onClick={(event) => handleEditAliaslick(event, program.account)} fontSize="inherit" sx={{ cursor: "pointer", ml: '5px' }} />
+            <EditIcon className="edit-btn" onClick={(event) => handleEditAliaslick(event, program.pubkey)} fontSize="inherit" sx={{ cursor: "pointer", ml: '5px' }} />
           </Tooltip>
         </Box>
         <Box>
           <Link
             component={NavLink}
-            to={`/programs/${program.account.publicKey.toString()}`}
+            to={`/programs/${program.pubkey.toString()}`}
             color={theme.palette.text.primary}
           >
-            {program.account.publicKey.toString()}
+            {program.pubkey.toString()}
           </Link>
-          <CopyToClipboard textToCopy={program.account.publicKey.toString()} notification='snackbar' />
+          <CopyToClipboard textToCopy={program.pubkey.toString()} notification='snackbar' />
         </Box>
 
       </Box>
@@ -105,16 +105,16 @@ export default function ProgramItem(props: ProgranItemProps) {
                 htmlFor="alias-input"
               >
                 {alias.length > 0
-                  ? `Edit alias for account #${index + 1} (${minimizeStr(program.account.publicKey.toString(), 4, 4)}) `
-                  : `Create alias for account #${index + 1} (${minimizeStr(program.account.publicKey.toString(), 4, 4)})`
+                  ? `Edit alias for account #${index + 1} (${minimizeStr(program.pubkey.toString(), 4, 4)}) `
+                  : `Create alias for account #${index + 1} (${minimizeStr(program.pubkey.toString(), 4, 4)})`
                 }
               </InputLabel>
               <Input
                 id="alias-input"
                 value={alias}
                 placeholder={alias.length > 0
-                  ? `Edit alias for account #${index + 1} (${minimizeStr(program.account.publicKey.toString(), 4, 4)}) `
-                  : `Create alias for account #${index + 1} (${minimizeStr(program.account.publicKey.toString(), 4, 4)})`
+                  ? `Edit alias for account #${index + 1} (${minimizeStr(program.pubkey.toString(), 4, 4)}) `
+                  : `Create alias for account #${index + 1} (${minimizeStr(program.pubkey.toString(), 4, 4)})`
                 }
                 endAdornment={
                   <InputAdornment position="end">
