@@ -379,7 +379,7 @@ export default function Wallet() {
                                 <InputLabel id="receiver-label">Receiver</InputLabel>
                                 <Select labelId="receiver-label" id="receiver-select" label="Receiver" value={dropReceiver} onChange={(e) => {
                                     const selectedAccount = workspace?.accountsAsArray.find(account => account.keypair.publicKey.toString() === e.target.value);
-                                    setReceiver(selectedAccount);
+                                    setDropReceiver(selectedAccount);
                                 }}
                                 >
 
