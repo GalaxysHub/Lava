@@ -10,6 +10,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { formatBytes, minimizeStr, timeConverter, timeSince } from "../../utils/helper";
 import ProgramTestTab from "./ProgramTestTab";
+import ProgramMainTab from "./ProgramMainTab";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -32,10 +33,11 @@ export default function ProgramDetailsPage() {
         hidden={value !== index}
         id={`simple-tabpanel-${index}`}
         aria-labelledby={`simple-tab-${index}`}
+        style={{ height: '100%' }}
         {...other}
       >
         {value === index && (
-          <Box sx={{ p: 3 }}>
+          <Box sx={{ p: 3, height: '100%' }}>
             {children}
           </Box>
         )}
@@ -65,23 +67,17 @@ export default function ProgramDetailsPage() {
       >
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Program Overview" {...a11yProps(0)} />
-          <Tab label="Testing" {...a11yProps(1)} />
-          <Tab label="TAB 3" {...a11yProps(2)} />
+          <Tab label="Test" {...a11yProps(1)} />
         </Tabs>
       </Box>
 
-      <Box mt='30px'>
+      <Box mt='30px' height={'100%'}>
         <TabPanel value={value} index={0}>
-          Program Owerview
-          {params.programId}
+          <ProgramMainTab programPubkeyStr={params.programId!} />
         </TabPanel>
 
         <TabPanel value={value} index={1}>
-          <ProgramTestTab programPubkeyStr={params.programId}/>
-        </TabPanel>
-
-        <TabPanel value={value} index={2}>
-          Tab 3
+          <ProgramTestTab programPubkeyStr={params.programId!} />
         </TabPanel>
       </Box>
 
