@@ -67,8 +67,13 @@ export default function BlockListPage() {
         sx={{ justifyContent: 'space-between' }}
       >
         <Box display={'flex'}>
-          <Box color={theme.palette.primary.main}>
-            Blocks Live mode:
+          <Box 
+          fontSize={'0.75rem'}
+          color={theme.palette.primary.main}
+          mt={0.5}
+          mr={0.5}
+          >
+            BLOCKS LIVE MODE:
           </Box>
 
           <Box>
@@ -83,8 +88,12 @@ export default function BlockListPage() {
         </Box>
 
         <Box display={'flex'}>
-          <Box color={theme.palette.primary.main}>
-            Items per page:
+          <Box fontSize={'0.75rem'}
+          color={theme.palette.primary.main}
+          mt={0.6}
+          mr={0.5}
+          >
+            ITEMS PER PAGE:
           </Box>
 
           <Box sx={{ mt: '-5px' }}>
