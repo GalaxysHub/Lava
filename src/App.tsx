@@ -12,7 +12,7 @@ export default function App()  {
 
   const navigate = useNavigate();
 
-  if (!workspace || !workspace.accounts || workspace.accounts?.length === 0) {
+  if (!workspace || !workspace.accounts || workspace.countAccounts === 0) {
     navigate('/start/');
   }
 
