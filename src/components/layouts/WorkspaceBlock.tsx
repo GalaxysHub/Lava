@@ -31,25 +31,10 @@ export default function WorkspaceBlock() {
 
   return (
 
-    <Box display={"flex"} mr="15px">
+    <Box display={"flex"}>
       <Tooltip title="Current Workspace" arrow placement="bottom" >
-        {/* <Box
-          // size='small'
-          onClick={handleClick}
-          aria-controls={open ? 'workspace-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
-          sx={{ cursor: 'pointer', mr: '10px' }}
-        >
-          <Box margin={'auto'} display={'inline-block'}>
-            <DvrIcon fontSize="small" /> :
-            Workspace Name
-          </Box>
-          <ExpandMoreIcon fontSize='medium' sx={{ mb: '-4px' }} />
-        </Box> */}
-
         <Button
-          size="small"
+          color="secondary"
           startIcon={<DvrIcon />}
           endIcon={<ExpandMoreIcon />}
           onClick={handleClick}
