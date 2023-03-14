@@ -11,7 +11,7 @@ export default function TransactionsFilter() {
 
   const { workspace, setWorkspace } = useContext(AppContext);
 
-  const accounts = workspace?.accounts;
+  const accounts = workspace?.accountsAsArray;
 
   const [open, setOpen] = useState(false);
 
@@ -24,9 +24,9 @@ export default function TransactionsFilter() {
     setOpen(false);
   };
 
-  const [checked, setChecked] = React.useState<number[]>([]);
+  const [checked, setChecked] = React.useState<string[]>([]);
 
-  const handleToggle = (value: number) => () => {
+  const handleToggle = (value: string) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -44,8 +44,8 @@ export default function TransactionsFilter() {
   }
 
   const handleSelectAll = () => {
-    let newChecked: number[] = [];
-    accounts?.forEach(item => newChecked.push(item.index))
+    let newChecked: string[] = [];
+    Object.keys(workspace?.accounts!).forEach((key, index) => newChecked.push(key))
     setChecked(newChecked);
   }
 
@@ -109,15 +109,15 @@ export default function TransactionsFilter() {
                 component="nav"
                 sx={{ maxHeight: '70vh' }}
               >
-                {workspace?.accounts && workspace?.accounts.map(item => (
+                {workspace?.accounts && Object.keys(workspace.accounts).map((key, index) => (
                   <ListItem
                     secondaryAction={
                       <Checkbox
                         edge="end"
                         size="small"
                         color="primary"
-                        onChange={handleToggle(item.index)}
-                        checked={checked.indexOf(item.index) !== -1}
+                        onChange={handleToggle(key)}
+                        checked={checked.indexOf(key) !== -1}
                       // inputProps={{ 'aria-labelledby': labelId }}
                       />
                     }
@@ -127,8 +127,8 @@ export default function TransactionsFilter() {
                     </ListItemIcon>
 
                     <ListItemText
-                      primary={item.alias ? `#${item.index} ${item.alias}` : `Account #${item.index}`}
-                      secondary={item.keypair.publicKey.toString()}
+                      primary={workspace.accounts![key].alias ? `#${index} ${workspace.accounts![key].alias}` : `Account #${index}`}
+                      secondary={key}
                     />
 
                   </ListItem>
