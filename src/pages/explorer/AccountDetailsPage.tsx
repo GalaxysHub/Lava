@@ -76,7 +76,7 @@ export default function AccountDetailsPage() {
     if (workspace) {
       const accountPubkey = new PublicKey(account);
       const connection = new Connection(workspace.RPC, "confirmed");
-      connection.getSignaturesForAddress(accountPubkey)
+      connection.getSignaturesForAddress(accountPubkey, {limit: 20})
         .then(txs => {
           // TODO: need a limit here
           setAccountTxs(txs)
