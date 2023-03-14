@@ -55,8 +55,11 @@ export default function Wallet() {
 
     const handleClose = () => {
         setDialogOpen(false);
-        setDropDialogOpen(false);
         setDialogContent(<div></div>);
+    };
+
+    const handleDropClose = () => {
+        setDropDialogOpen(false);
     };
 
     const linkStyle = {
@@ -370,7 +373,7 @@ export default function Wallet() {
                 </DialogActions>
             </Dialog>
 
-            <Dialog open={dropDialogOpen} onClose={handleClose}>
+            <Dialog open={dropDialogOpen} onClose={handleDropClose}>
                 <DialogTitle>SOL Airdrop:</DialogTitle>
                 <DialogContent>
                     <DialogContentText sx={{ textAlign: 'center', fontSize: '20px' }}>
@@ -423,7 +426,7 @@ export default function Wallet() {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Close</Button>
+                    <Button onClick={handleDropClose}>Close</Button>
                 </DialogActions>
             </Dialog>
 
