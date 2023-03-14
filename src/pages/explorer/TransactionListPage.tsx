@@ -60,9 +60,10 @@ export default function TransactionListPage() {
     setOpen(false);
   };
 
-  const accounts = workspace?.accounts;
+  const accounts = workspace?.accountsAsArray!;
 
-  const [keysToFetch, setKeysToFetch] = useState<PublicKey[]>([]);
+
+  const [keysToFetch, setKeysToFetch] = useState<PublicKey[]>(accounts.map(item => item.keypair.publicKey));
 
   const isPubkeyInList = (pubkey: PublicKey) => {
     for (let i = 0; i < keysToFetch.length; i++) {
@@ -171,7 +172,7 @@ export default function TransactionListPage() {
           <Table size="small" className="table-striped">
             <TableHead>
               <TableRow>
-                <TableCell align="center">ACCOUNT</TableCell>
+                {/* <TableCell align="center">ACCOUNT</TableCell> */}
                 <TableCell align="left">TX SIGNATURE</TableCell>
                 <TableCell align="center">SLOT</TableCell>
                 <TableCell align="center">STATUS</TableCell>
@@ -184,9 +185,9 @@ export default function TransactionListPage() {
               {txs.map((item) => (
                 <TableRow hover key={item.signature}>
 
-                  <TableCell align="center">
+                  {/* <TableCell align="center">
                     Account #{item.account.index}
-                  </TableCell>
+                  </TableCell> */}
 
                   <TableCell align="left">
                     {/* {minimizeStr(item.signature, 16, 16)} */}
@@ -279,7 +280,7 @@ export default function TransactionListPage() {
                 component="nav"
                 sx={{ maxHeight: '70vh' }}
               >
-                {workspace?.accounts && workspace?.accounts.map(item => (
+                {workspace?.accounts && workspace?.accountsAsArray.map((item, index) => (
                   <ListItem
                     secondaryAction={
                       <Checkbox
@@ -297,7 +298,7 @@ export default function TransactionListPage() {
                     </ListItemIcon>
 
                     <ListItemText
-                      primary={item.alias ? `#${item.index} ${item.alias}` : `Account #${item.index}`}
+                      primary={item.alias ? `#${index} ${item.alias}` : `Account #${index}`}
                       secondary={item.keypair.publicKey.toString()}
                     />
 
