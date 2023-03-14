@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react"
-import { Box, Dialog, DialogContent, IconButton, Popover, Tooltip, useTheme } from "@mui/material"
+import { Box, Button, Dialog, DialogContent, IconButton, Popover, Tooltip, useTheme } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StopIcon from '@mui/icons-material/Stop';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import { AppContext } from "../../context/main";
 import Blinker from "../helpers/Blinker";
 
@@ -23,7 +24,7 @@ export default function NodeBlock() {
     txCount: 0,
   })
 
-  const handleNodeClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleNodeClick = () => {
     setOpen(true);
   }
 
@@ -48,15 +49,34 @@ export default function NodeBlock() {
 
   return (
     <>
-      <Tooltip title="Click to show details" arrow placement="bottom" >
+      <Button
+        id="cluster-button"
+        startIcon={
+          workspace?.validatorStatus
+          ?
+          <PlayArrowIcon color="success" />
+          :
+          <StopIcon color="error" />
+        }
+        endIcon={<ExpandMoreIcon />}
+        aria-controls={open ? 'cluster-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleNodeClick}
+        color="secondary"
+      >
+        Test Validator
+      </Button>
+
+      {/* <Tooltip title="Click to show details" arrow placement="bottom" >
         <Box
           onClick={handleNodeClick}
           sx={{ cursor: 'pointer', mr: '10px' }}
         >
           <Box display={'inline-block'}>
-            <span>Node Status</span>
+            <span>Cluster</span>
             {workspace?.validatorStatus ?
-              <Box component={'span'}><Blinker color='success' />RUNNING</Box>
+              <Box component={'span'}><Blinker color='success' />DEVNET</Box>
               :
               <Box component={'span'} color={theme.palette.secondary.main}><Blinker color='error' />STOPPED</Box>
             }
@@ -84,7 +104,7 @@ export default function NodeBlock() {
         >
           <PlayArrowIcon fontSize='small' sx={{ m: '2px' }} />
         </IconButton>
-      </Tooltip>
+      </Tooltip> */}
 
       <Dialog
         fullWidth
