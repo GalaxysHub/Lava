@@ -46,13 +46,14 @@ export default function Nav() {
   return (
     <>
       <Box component="header">
-        <Box id="top" bgcolor={theme.palette.primary.dark}>
+        <Box id="top" bgcolor={"#222222"}>
           <Grid container spacing={1}>
 
             <Grid item xs={1} margin="auto">
               <Box className="logo">
-                <span>Lava</span>
-                <sup>beta</sup>
+                <img src="/logo-horizontal.svg" alt="LAVA" />
+                {/* <span>Lava</span> */}
+                {/* <sup>beta</sup> */}
               </Box>
             </Grid>
 

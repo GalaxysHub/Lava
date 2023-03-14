@@ -13,9 +13,12 @@ export default function StartPage() {
 
       <Box margin={"auto"} minWidth="300px" color={theme.palette.common.white} >
 
-        <Box component={'span'} fontSize={'3.5rem'} fontWeight="700" letterSpacing={"0.5rem"}>LAVA</Box>
-        <br />
-        <Box component={'span'} fontSize={'0.8rem'}>SOLANA DEVELOPER SUITE</Box>
+        <img src="/logo-horizontal.svg" alt="LAVA" />
+        {/* <Box component={'span'} fontSize={'3.5rem'} fontWeight="700" letterSpacing={"0.5rem"}>
+          
+        </Box> */}
+        {/* <br /> */}
+        {/* <Box component={'span'} fontSize={'0.8rem'}>SOLANA DEVELOPER SUITE</Box> */}
 
         <Box mt={3} mb={1}>
           <CustomWorkspace />
