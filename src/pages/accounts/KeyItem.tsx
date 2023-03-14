@@ -11,17 +11,19 @@ import { NavLink } from "react-router-dom";
 
 interface AccountItemProps {
   index: number,
-  account: TAccount,
+  pubkeyStr: string,
 }
 
 export default function KeyItem(props: AccountItemProps) {
 
-  const { index, account } = props;
+  const { index, pubkeyStr } = props;
 
   const { workspace, setWorkspace } = useContext(AppContext);
   const theme = useTheme();
 
-  const [alias, setAlias] = useState(account.alias);
+  const account = workspace?.accounts![pubkeyStr];
+
+  const [alias, setAlias] = useState(account?.alias);
 
   // Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -29,7 +31,7 @@ export default function KeyItem(props: AccountItemProps) {
     setDialogOpen(false);
   };
 
-  const handleEditAliaslick = (event: React.MouseEvent<SVGSVGElement>, value: Keypair) => {
+  const handleEditAliaslick = (event: React.MouseEvent<SVGSVGElement>, value: string) => {
     setDialogOpen(true);
   }
 
@@ -45,7 +47,7 @@ export default function KeyItem(props: AccountItemProps) {
 
     if (workspace?.accounts && alias !== "") {
       let newWorkspace = Object.assign(Object.create(Object.getPrototypeOf(workspace)), workspace);
-      newWorkspace.accounts[index].alias = alias;
+      newWorkspace.accounts[pubkeyStr].alias = alias;
       setWorkspace(newWorkspace);
     }
   }
@@ -55,29 +57,29 @@ export default function KeyItem(props: AccountItemProps) {
     <>
 
       <Box>
-        <Box className={account.alias ? 'active' : ''}>
+        <Box className={account?.alias ? 'active' : ''}>
           {/* <PersonOutlineIcon fontSize="inherit" sx={{ mb: '-2px' }} /> */}
-          {account.alias ?
+          {account?.alias ?
             <>
               {`#${index + 1}:`}
-              <Box component={'span'} color={theme.palette.primary.main} fontWeight='700' >{account.alias}</Box>
+              <Box component={'span'} color={theme.palette.primary.main} fontWeight='700' >{account?.alias}</Box>
             </>
             :
-            `Account Program #${index + 1}`
+            `Workspace Account #${index + 1}`
           }
           <Tooltip title="Edit alias" arrow placement="right" >
-            <EditIcon className="edit-btn" onClick={(event) => handleEditAliaslick(event, account.keypair)} fontSize="inherit" sx={{ cursor: "pointer", ml: '5px' }} />
+            <EditIcon className="edit-btn" onClick={(event) => handleEditAliaslick(event, pubkeyStr)} fontSize="inherit" sx={{ cursor: "pointer", ml: '5px' }} />
           </Tooltip>
         </Box>
         <Box>
           <Link 
           component={NavLink} 
-          to={`/accounts/${account.keypair.publicKey.toString()}`}
+          to={`/accounts/${pubkeyStr}`}
           color={theme.palette.text.primary}
           >
-            {account.keypair.publicKey.toString()}
+            {pubkeyStr}
           </Link>
-          <CopyToClipboard textToCopy={account.keypair.publicKey.toString()} notification='snackbar' />
+          <CopyToClipboard textToCopy={pubkeyStr} notification='snackbar' />
         </Box>
 
       </Box>
@@ -104,17 +106,17 @@ export default function KeyItem(props: AccountItemProps) {
                 sx={{ color: 'text.secondary' }}
                 htmlFor="alias-input"
               >
-                {alias.length > 0
-                  ? `Edit alias for account #${index + 1} (${minimizeStr(account.keypair.publicKey.toString(), 4, 4)}) `
-                  : `Create alias for account #${index + 1} (${minimizeStr(account.keypair.publicKey.toString(), 4, 4)})`
+                {alias?.length! > 0
+                  ? `Edit alias for account #${index + 1} (${minimizeStr(pubkeyStr, 4, 4)}) `
+                  : `Create alias for account #${index + 1} (${minimizeStr(pubkeyStr, 4, 4)})`
                 }
               </InputLabel>
               <Input
                 id="alias-input"
                 value={alias}
-                placeholder={alias.length > 0
-                  ? `Edit alias for account #${index + 1} (${minimizeStr(account.keypair.publicKey.toString(), 4, 4)}) `
-                  : `Create alias for account #${index + 1} (${minimizeStr(account.keypair.publicKey.toString(), 4, 4)})`
+                placeholder={alias?.length! > 0
+                  ? `Edit alias for account #${index + 1} (${minimizeStr(pubkeyStr, 4, 4)}) `
+                  : `Create alias for account #${index + 1} (${minimizeStr(pubkeyStr, 4, 4)})`
                 }
                 endAdornment={
                   <InputAdornment position="end">
