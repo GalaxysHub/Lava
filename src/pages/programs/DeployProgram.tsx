@@ -9,8 +9,7 @@ import { formatBytes } from "../../utils/helper";
 import { BpfLoader, BPF_LOADER_PROGRAM_ID, Connection, Keypair } from "@solana/web3.js";
 import { AppContext } from "../../context/main";
 import { Buffer } from "buffer";
-import { TProgram } from "../../libs/types";
-import { Workspace } from "../../libs";
+import { Idl } from '@project-serum/anchor';
 
 
 export default function DeployProgram() {
@@ -22,42 +21,70 @@ export default function DeployProgram() {
 
   const [open, setOpen] = useState(false);
   const [radioValue, setRadioValue] = React.useState('local');
-  const [error, setError] = React.useState(false);
-  const [helperText, setHelperText] = React.useState('Choose File');
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const clearInputValue = () => {
-    const inputEl = inputRef.current
+  const [error, setError] = React.useState(false);
+
+  const inputRefProgram = React.useRef<HTMLInputElement>(null);
+  const inputRefIdl = React.useRef<HTMLInputElement>(null);
+
+  const [parsedIdl, setPasedIdl] = useState<Idl>();
+
+  const clearProgramInputValue = () => {
+    const inputEl = inputRefProgram.current
     if (inputEl) {
       inputEl.value = ''
     }
   }
 
-  const [selectedFile, setSelectedFile] = React.useState<File | null | undefined>(null)
-  const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
-    setSelectedFile(event.target.files?.item(0))
+  const clearIdlInputValue = () => {
+    const inputEl = inputRefIdl.current
+    if (inputEl) {
+      inputEl.value = ''
+    }
   }
-  const handleFileClear = () => {
-    clearInputValue();
-    setSelectedFile(null)
+
+  const [selectedProgramFile, setSelectedProgramFile] = React.useState<File | null | undefined>(null)
+  const handleProgramFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
+    setSelectedProgramFile(event.target.files?.item(0))
+  }
+  const handleProgramFileClear = () => {
+    clearProgramInputValue();
+    setSelectedProgramFile(null)
+  }
+
+  const [selectedIdlFile, setSelectedIdlFile] = React.useState<File | null | undefined>(null)
+  const handleIdlFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(event.target.files?.item(0)!, "UTF-8");
+    fileReader.onload = e => {
+      // console.log("e.target.result", e.target?.result);
+      // console.log(JSON.parse(fileReader?.result?.toString()!));
+      setPasedIdl(JSON.parse(fileReader?.result?.toString()!));
+    };
+    // TODO - Check
+    setSelectedIdlFile(event.target.files?.item(0))
+  }
+  const handleIdlFileClear = () => {
+    clearIdlInputValue();
+    setSelectedIdlFile(null)
   }
 
   const addProgram = (event: React.MouseEvent<HTMLElement>, value?: any) => {
     // Show loader
     setOpen(true);
-
   }
 
   // Dialog
   const handleDialogClose = () => {
-    clearInputValue();
-    setSelectedFile(null)
+    clearProgramInputValue();
+    clearIdlInputValue();
+    setSelectedProgramFile(null)
+    setSelectedIdlFile(null)
     setOpen(false);
   };
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRadioValue((event.target as HTMLInputElement).value);
-    setHelperText(' ');
     setError(false);
   };
 
@@ -66,13 +93,12 @@ export default function DeployProgram() {
     //TODO
     setLoading(true);
 
-    if (workspace && selectedFile && workspace.accounts) {
+    if (workspace && selectedProgramFile && workspace.accounts) {
       const connection = new Connection(workspace.RPC, "confirmed");
-      // const payer = workspace.mint;
-      const payer = workspace.accounts[0].keypair;
+      const payer = workspace.mainWallet?.keypair!;
       const programAccount = Keypair.generate();
 
-      selectedFile.arrayBuffer().then(buffer => {
+      selectedProgramFile.arrayBuffer().then(buffer => {
         BpfLoader.load(connection, payer, programAccount, Buffer.from(buffer), BPF_LOADER_PROGRAM_ID)
           .then(result => {
             // console.log(result);
@@ -82,9 +108,12 @@ export default function DeployProgram() {
               let newWorkspace = Object.assign(Object.create(Object.getPrototypeOf(workspace)), workspace);
               newWorkspace.programs[programAccount.publicKey.toString()] =
               {
-                alias: '',
+                alias: `${parsedIdl?.name ? parsedIdl?.name : ''}`,
                 pubkey: programAccount.publicKey,
                 account: programAccount,
+                cluster: workspace?.cluster,
+                size: buffer.byteLength,
+                idl: (parsedIdl?.name !== undefined) ? parsedIdl : {},
                 initialTxs: [],
                 pdas: {},
               }
@@ -155,6 +184,7 @@ export default function DeployProgram() {
                     value={radioValue}
                     onChange={handleRadioChange}
                     defaultValue="local"
+                    sx={{ display: 'flex', justifyContent: 'center' }}
                   >
                     <FormControlLabel value="local" control={<Radio size="small" />} label="From local machine" />
                     <FormControlLabel value="clone" control={<Radio size="small" />} label="Clone from cluster" />
@@ -163,10 +193,9 @@ export default function DeployProgram() {
                   <Box minHeight={'200px'}>
                     {radioValue === 'local'
                       ?
-                      <>
-                        <FormHelperText>{helperText}</FormHelperText>
+                      <Box textAlign={'center'}>
 
-                        <FormGroup row sx={{ my: '15px' }}>
+                        <FormGroup row sx={{ my: '25px', display: 'block', justifyContent: 'center' }}>
                           <Button
                             variant="outlined"
                             component="label"
@@ -174,21 +203,23 @@ export default function DeployProgram() {
                             size="small"
                             startIcon={<FileUploadIcon />}
                             sx={{ mr: '10px' }}>
-                            Select file
+                            Select .so file
                             <input
                               // accept="image/*"
                               hidden
                               type="file"
-                              ref={inputRef}
-                              onChange={handleFileSelect}
+                              ref={inputRefProgram}
+                              onChange={handleProgramFileSelect}
                             />
                           </Button>
-                          <FormHelperText>{selectedFile ? `${selectedFile.name} (${formatBytes(selectedFile.size)})` : 'no file selected'}</FormHelperText>
+                          <FormHelperText sx={{ textAlign: 'center' }}>
+                            {selectedProgramFile ? `${selectedProgramFile.name} (${formatBytes(selectedProgramFile.size)})` : 'no file selected'}
+                          </FormHelperText>
 
-                          {(selectedFile as File)?.name !== undefined && (
+                          {/* {(selectedProgramFile as File)?.name !== undefined && (
                             <IconButton
                               aria-label="clear-file"
-                              onClick={handleFileClear}
+                              onClick={handleProgramFileClear}
                               size='small'
                               sx={{
                                 color: (theme) => theme.palette.secondary.dark,
@@ -196,9 +227,44 @@ export default function DeployProgram() {
                             >
                               <CloseIcon />
                             </IconButton>
-                          )}
+                          )} */}
                         </FormGroup>
-                      </>
+
+                        <FormGroup row sx={{ my: '25px', display: 'block', justifyContent: 'center' }}>
+                          <Button
+                            variant="outlined"
+                            component="label"
+                            disableElevation
+                            size="small"
+                            startIcon={<FileUploadIcon />}
+                            sx={{ mr: '10px' }}>
+                            Select IDL file
+                            <input
+                              // accept="image/*"
+                              hidden
+                              type="file"
+                              ref={inputRefIdl}
+                              onChange={handleIdlFileSelect}
+                            />
+                          </Button>
+                          <FormHelperText sx={{ textAlign: 'center' }}>
+                            {selectedIdlFile ? `${selectedIdlFile.name} (${formatBytes(selectedIdlFile.size)})` : 'no file selected'}
+                          </FormHelperText>
+
+                          {/* {(selectedIdlFile as File)?.name !== undefined && (
+                            <IconButton
+                              aria-label="clear-file"
+                              onClick={handleIdlFileClear}
+                              size='small'
+                              sx={{
+                                color: (theme) => theme.palette.secondary.dark,
+                              }}
+                            >
+                              <CloseIcon />
+                            </IconButton>
+                          )} */}
+                        </FormGroup>
+                      </Box>
                       :
                       <>
                         <br></br>
@@ -211,7 +277,7 @@ export default function DeployProgram() {
                     sx={{ mt: 1, mr: 1 }}
                     type="submit"
                     variant="contained"
-                    disabled={(selectedFile as File)?.name === undefined}
+                    disabled={(selectedProgramFile as File)?.name === undefined}
                     loading={loading}
                     loadingPosition={loading ? 'center' : 'start'}
                   // startIcon={<SaveIcon />}
