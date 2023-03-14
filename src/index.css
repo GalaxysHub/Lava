@@ -20,7 +20,7 @@ header {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 999;
+  z-index: 1300;
 }
 
 #top {
@@ -31,7 +31,7 @@ header {
   /* background-color: #333; */
   color: #eee;
   font-size: 0.9rem;
-  z-index: 1000;
+  z-index: 1300;
 }
 
 
@@ -165,7 +165,7 @@ aside a:hover {
   margin-left: 60px;
   margin-bottom: 20px;
   padding: 5px 15px;
-  height: 90vh;
+  height: calc(100vh - 70px);
 }
 
 #main svg {
@@ -184,7 +184,7 @@ footer {
   background-color: #222;
   font-size: 0.8rem;
   /* text-transform: uppercase; */
-  z-index: 1000;
+  z-index: 1300;
 }
 
 footer span {
@@ -266,6 +266,12 @@ footer span:hover {
   text-overflow: ellipsis;
 }
 
+.long-string-left {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .search-item-name span {
   display: inline;
 
@@ -283,4 +289,90 @@ footer span:hover {
   top: 46px;
   width: 100%;
   z-index: 999;
+}
+
+.memory-cell {
+  display: inline-block;
+  /* margin: 0 2px; */
+  /* width: 15px;
+  height: 15px; */
+  padding: 0 2px;
+  width: 6%;
+  height: 6%;
+  cursor: pointer;
+}
+
+.memory-cell:hover {
+  opacity: 0.8;
+}
+
+.memory-cell > div {
+  margin: 0 1px;
+  /* min-height: 17px; */
+  border-radius: 2px;
+  font-size: 0.6rem;
+  text-align: center;
+  /* color: #666; */
+}
+
+.dotted::after{
+  content: "...............................................................................................";
+  letter-spacing: 2px;
+  display: block;
+  /* font-size: 18px; */
+  margin-left:30px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.dotted {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+/* .dotted::after{
+  content: '';
+  position: absolute;
+  bottom: .35em;
+  width: 100%;
+  border-bottom: .1em dashed;
+} */
+
+.table-striped tr:nth-child(odd) td {
+  filter: brightness(85%);
+  background-color: rgba(2,2,2, 0.1);
+}
+
+.table-striped th {
+  border: none;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.table-striped tr td {
+  border: none;
+}
+
+.table-striped-with-head tr:nth-child(even) {
+  filter: brightness(85%);
+  background-color: rgba(2,2,2, 0.1);
+}
+
+.table-striped-with-head th {
+  filter: brightness(85%);
+  background-color: rgba(2,2,2, 0.1);
+  border: none;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.table-striped-with-head tr td {
+  border: none;
+}
+
+tr > td:first-child {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  opacity: 0.8;
 }
