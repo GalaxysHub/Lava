@@ -3,32 +3,6 @@ import * as bip39 from 'bip39';
 import { TAccount } from "../libs/types";
 
 /**
- * 
- * @param n - number of keypairs to generate
- * @returns Array<TAccount>
- */
-export const generateKeypairs = (n: number): Array<TAccount> => {
-  let accounts: Array<TAccount> = []
-  for (let i = 0; i < n; i++) {
-    const mnemonic = bip39.generateMnemonic();
-    const seed = bip39.mnemonicToSeedSync(mnemonic);
-    const keypair = Keypair.fromSeed(seed.slice(0, 32));
-
-    accounts.push(
-      {
-        index: i + 1,
-        alias: "",
-        mnemonic: mnemonic,
-        keypair: keypair,
-        balance: 0,
-        txsCount: 0
-      }
-    )
-  }
-  return accounts
-}
-
-/**
  * Minimize hash string
  * @param str - string to minimize
  * @param start 
