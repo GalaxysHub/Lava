@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
-import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, IconButton, InputLabel, List, ListItem, ListItemIcon, ListItemText, MenuItem, Radio, RadioGroup, Select, TextField, Typography, useTheme } from "@mui/material";
+import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, IconButton, InputLabel, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Radio, RadioGroup, Select, TextField, Tooltip, Typography, useTheme } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
 import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TextFormatIcon from '@mui/icons-material/TextFormat';
+import ConstructionIcon from '@mui/icons-material/Construction';
 import { AppContext } from "../../context/main";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";
@@ -19,11 +21,35 @@ interface InstructionAccount {
   programID: PublicKey;
 }
 
+
+interface TestInstructionArgument {
+  
+}
+
+interface TestInstructionAccount {
+
+}
+
+interface TestInstruction {
+  instructionIndex: number,
+  accounts: TestInstructionAccount[],
+  arguments: TestInstructionArgument[],
+}
+
 export default function TestInstructionAccountItem(props: InstructionAccount) {
   const { instruction, account, index, programID } = props;
 
   const { workspace, setWorkspace } = React.useContext(AppContext);
   const theme = useTheme();
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const helperMenuOpen = Boolean(anchorEl);
+  const handleHelperClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleHelperMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   const [open, setOpen] = React.useState(false);
   const [pdaOpen, setPdaOpen] = React.useState(false);
@@ -43,7 +69,7 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
       //   instruction: instruction.name.toString(), 
       //   accountIndex: index,
       // })
-      
+
       // let newWorkspaceAccount: TAccount = {
       //   alias: alias,
       //   mnemonic: '',
@@ -53,16 +79,17 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
       // }
 
       // newWorkspaceAccount.relations![account.publicKey.toString()] = newWorkspaceAccountRelations;
-      
+
       // newWorkspace.accounts[programID.toString()] = newWorkspaceAccount;
       // setWorkspace(newWorkspace);
 
-      
+
     }
   }
 
   const findPdaHandler = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, alias: string) => {
     event.preventDefault();
+    handleHelperMenuClose();
     setPdaOpen(true);
     // const account = PublicKey.findProgramAddressSync();;
     //TODO - add account to workspace
@@ -136,7 +163,11 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
     newWorkspace.programs[programID.toString()].pdas[pdaPubkey.toString()] = [pdaPubkey, pdaBump];
     setWorkspace(newWorkspace);
     console.log(workspace);
+
+    // const x = workspace?.programs[programID.toString()].tests?.at(0)?.instructions.at(0)?.accounts.at(0);
   }
+
+  const [testInstruction, seTestInstruction] = React.useState<TestInstruction>();
 
   // useEffect(() => {
   //   console.log(workspace);
@@ -149,56 +180,93 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
         id={`select-ix-account-item-${index}`}
         mb={2}
       >
-        <FormControl size="small" variant="standard" fullWidth>
-          <InputLabel
-            id={`select-label-${index}`}
-          // sx={{ fontSize: '0.9rem' }}
-          >
-            {account.name}
-          </InputLabel>
-          <Select
-            labelId={`select-label-${index}`}
-            id={`select-${index}`}
-            // value={selectedAccount}
-            label={account.name}
-            // onChange={handleChangeInstruction}
-            sx={{
-              fontSize: '0.85rem',
-              color: `${theme.palette.primary.main}`
-            }}
-          >
-            {selectedAccount && (
-              <MenuItem
-                selected
-                sx={{ fontSize: '0.8rem' }}
-                // value={selectedAccount.toString()}
-                divider
+        <FormControl
+          size="small"
+          variant="standard"
+          fullWidth
+        >
+          <Box display={'flex'}>
+            <Box width={'100%'}>
+              <InputLabel
+                id={`select-label-${index}`}
+              // sx={{ fontSize: '0.9rem' }}
               >
-                <PersonIcon fontSize="inherit" color="secondary" sx={{ mb: '-2px' }} /> {selectedAccount.toString()}
-              </MenuItem>
-            )}
-            <MenuItem
-              onClick={(event) => generateHandler(event, account.name)}
-              sx={{ fontSize: '0.7rem', textTransform: 'uppercase' }}
-              value=''
-            >
-              Generate & Paste
-            </MenuItem>
+                {account.name}
+              </InputLabel>
+              <Select
+                fullWidth
+                labelId={`select-label-${index}`}
+                id={`select-${index}`}
+                // value={selectedAccount}
+                label={account.name}
+                // onChange={handleChangeInstruction}
+                sx={{
+                  fontSize: '0.85rem',
+                  color: `${theme.palette.primary.main}`
+                }}
+              >
+                {workspace?.accountsAsArray.map((item, index) => (
+                  <MenuItem
+                    sx={{ fontSize: '0.8rem' }}
+                    // value={selectedAccount.toString()}
+                    divider
+                  >
+                    <PersonIcon
+                      fontSize="inherit"
+                      color="secondary"
+                      sx={{ mb: '-2px' }} />
+                    {item.keypair.publicKey.toString()}
+                  </MenuItem>
+                ))
 
-            <MenuItem
-              onClick={(event) => findPdaHandler(event, account.name)}
-              sx={{ fontSize: '0.7rem', textTransform: 'uppercase' }}
-            >
-              Find PDA & Paste
-            </MenuItem>
+                }
+              </Select>
+            </Box>
+            <Box>
+              <Tooltip title={'Airgrop'}>
+                <IconButton
+                  sx={{ mt: 2, mr: -1 }}
+                  size="small"
+                  id="basic-button"
+                  aria-controls={helperMenuOpen ? 'basic-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={helperMenuOpen ? 'true' : undefined}
+                  onClick={handleHelperClick}
+                >
+                  <MoreVertIcon
+                    fontSize="inherit"
+                    color="primary"
+                  />
+                </IconButton>
+              </Tooltip>
 
-            <MenuItem
-              onClick={(event) => selectExistingHandler(event, account.name)}
-              sx={{ fontSize: '0.7rem', textTransform: 'uppercase' }}
-            >
-              Select Existing
-            </MenuItem>
-          </Select>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={helperMenuOpen}
+                onClose={handleHelperMenuClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+                // elevation={0}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <MenuItem onClick={(event) => generateHandler(event, account.name)} sx={{ fontSize: '0.7rem' }}>
+                  GENERATE & PASTE
+                </MenuItem>
+                <MenuItem onClick={(event) => findPdaHandler(event, account.name)} sx={{ fontSize: '0.7rem' }}>
+                  FIND PDA
+                </MenuItem>
+              </Menu>
+            </Box>
+          </Box>
         </FormControl>
       </Box>
 
