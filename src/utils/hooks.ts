@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import * as web3 from "@solana/web3.js";
 import { AppContext } from "../context/main";
 import { ResultType } from "@remix-run/router/dist/utils";
+import { TestInstuctionAccount, TestInstuctionArgument } from "../libs/types";
 
 
 export function useAirdrop(pubkey: web3.PublicKey, number: number) {
@@ -65,3 +66,17 @@ export const useAlias = (pubkeyStr: string): string => {
 
   return result;
 };
+
+// export const useTestsInitial = (program: string) => {
+
+//   const { workspace } = useContext(AppContext);
+
+//   const argsArr: TestInstuctionArgument[] = [];
+//   const accountsArr: TestInstuctionAccount[] = [];
+
+//   workspace?.programs[program].idl?.instructions((item, index) => {
+
+//   })
+
+
+// }
