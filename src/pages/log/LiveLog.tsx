@@ -131,7 +131,7 @@ export default function LiveLog() {
             aria-labelledby="form-control-greps"
             name="greps"
             onChange={handleChangeGrepVariant}
-            defaultValue="warn"
+            defaultValue="INFO"
           >
             <FormControlLabel
               value="INFO"
