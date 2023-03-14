@@ -3,28 +3,54 @@ import { Box, Button, Divider, FormControlLabel, IconButton, InputBase, Radio, R
 import { AppContext } from "../../context/main";
 
 
+const dummyLog = ``;
+
+const log = dummyLog.split('\n');
+
 export default function LiveLog() {
 
   const theme = useTheme();
   const { workspace } = useContext(AppContext);
 
-  const [liveMode, setLiveMode] = useState(true)
+  const [liveMode, setLiveMode] = useState(false)
   const handleLiveModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLiveMode(event.target.checked);
+    // setLiveMode(!liveMode);
+
   };
 
-  const [grepVariant, setGrepVariant] = useState('warn');
-  const [grepString, setGrepString] = useState("");
+  const [grepVariant, setGrepVariant] = useState('INFO');
+  const [grepColor, setGrepColor] = useState('green');
+  const [grepString, setGrepString] = useState("INFO");
+  const [grep, setGrep] = useState('INFO');
+
   const handleChangeGrepVariant = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGrepVariant(event.target.value);
+    switch (event.target.value) {
+      case 'INFO':
+        setGrepColor('green');
+        setGrep('INFO')
+        break;
+      case 'WARN':
+        setGrepColor('yellow');
+        setGrep('WARN')
+        break;
+      case 'ERR':
+        setGrepColor('red');
+        setGrep('ERR')
+        break;
+    }
   };
   const handleGrepApply = (event: React.FormEvent<HTMLButtonElement>) => {
     const request = {} // TODO
-    
+
     if (grepVariant !== 'grep') {
       // console.log(grepVariant);
       // request = {} // TODO
+
     } else {
+      setGrepColor(theme.palette.primary.main);
+      setGrep(grepString)
       // console.log(grepString);
       // request = {} // TODO
     }
@@ -48,11 +74,27 @@ export default function LiveLog() {
 
     if (liveMode && workspace) {
 
-      // TODO
-      // setLines([]);
+      let i = 0;
+      // create an interval which will increment the step
+      const timer = setInterval(() => {
+        if (i < log.length) {
+          i++;
+          setLines(oldData => [log[i], ...oldData]);
+        } else {
+          // stop here because we have reached the end of steps
+          i = 0;
+        }
+      }, 200);
+
+      //destroy interval on unmount
+      return () => clearInterval(timer)
     }
 
-  }, [liveMode]);
+    console.log(grepString)
+    console.log(grepColor)
+    console.log(grepVariant)
+
+  }, [liveMode, grepString]);
 
   return (
     <>
@@ -92,13 +134,19 @@ export default function LiveLog() {
             defaultValue="warn"
           >
             <FormControlLabel
-              value="warn"
+              value="INFO"
+              control={<Radio size="small" />}
+              label="<INFO> only"
+              labelPlacement="end"
+            />
+            <FormControlLabel
+              value="WARN"
               control={<Radio size="small" />}
               label="<WARN> only"
               labelPlacement="end"
             />
             <FormControlLabel
-              value="err"
+              value="ERR"
               control={<Radio size="small" />}
               label="<ERR> only"
               labelPlacement="end"
@@ -156,7 +204,13 @@ export default function LiveLog() {
         <ul>
           {lines?.length > 0 && (
             lines.map((line, index) => (
-              <li>{line}</li>
+              line.includes(grep) && (
+                <li
+                  dangerouslySetInnerHTML={{
+                    __html: `${line.replace(grep, match => `<span style="color: ${grepColor}">${match} </span>`)}`
+                  }}>
+                </li>
+              )
             ))
           )}
         </ul>
