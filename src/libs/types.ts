@@ -1,19 +1,11 @@
 import { Keypair, PublicKey } from "@solana/web3.js";
-import { TAnchorIDL } from "./anchor";
+import { Idl } from "@project-serum/anchor";
 
-export type TAcoountRelation = {
-  instruction: [string, number] 
-}
-
-export type TAcoountProgramRelation = {
-  program: Record<string, TAcoountRelation[]>
-}
 
 export type TAccount = {
   alias: string,
   mnemonic: string,
   keypair: Keypair,
-  relations?: TAcoountProgramRelation[],
   main: boolean,
 }
 
@@ -24,7 +16,7 @@ export type TProgram = {
   initialTxs: string[],
   projectPath?: string,
   size?: number,
-  idl?: TAnchorIDL,
+  idl?: Idl,
   cluster: TCluster,
   pdas: Record<string, [PublicKey, number]>;
 }
