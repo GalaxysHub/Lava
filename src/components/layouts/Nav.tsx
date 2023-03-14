@@ -17,6 +17,8 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import QueuePlayNextIcon from '@mui/icons-material/QueuePlayNext';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AddIcon from '@mui/icons-material/Add';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import Grid from '@mui/material/Grid';
@@ -24,7 +26,6 @@ import { Button, IconButton, Link, Stack, Tooltip, useTheme } from '@mui/materia
 import NodeBlock from './NodeBlock';
 import WorkspaceBlock from './WorkspaceBlock';
 import Wallet from './Wallet';
-import ClusterBlock from './ClusterBlock';
 import ClusterSelect from './ClusterSelect';
 
 export default function Nav() {
@@ -55,36 +56,52 @@ export default function Nav() {
               </Box>
             </Grid>
 
-            <Grid item xs={3} margin="auto" display={"flex"} >
-              <WorkspaceBlock />
+            <Grid item xs={7} margin="auto" display={'flex'} justifyContent={'space-between'}>
+              <Box display={'flex'} >
+                <WorkspaceBlock />
 
-              <Tooltip title="Create New Workspace" arrow placement="bottom" >
+                <Box display={"flex"} mx={2}>
+                  <MoreVertIcon fontSize='inherit' sx={{ margin: 'auto' }} />
+                </Box>
+
+                {/* <Tooltip title="Create New Workspace" arrow placement="bottom" >
                 <IconButton component={NavLink} to="/start" aria-label="workspace-new" size='small'>
                   <QueuePlayNextIcon fontSize='small' />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
 
-              <Tooltip title="Exit" arrow placement="bottom" >
+                <Button
+                  color="secondary"
+                  startIcon={<ControlPointIcon />}
+                  component={NavLink}
+                  to="/start"
+                  aria-label="workspace-new"
+                >
+                  New
+                </Button>
+
+                {/* <Tooltip title="Exit" arrow placement="bottom" >
                 <IconButton aria-label="exit" size='small' sx={{ ml: '10px' }}>
                   <LogoutIcon fontSize='small' />
                 </IconButton>
-              </Tooltip>
-            </Grid>
-
-            <Grid item xs={4} margin="auto" display={"flex"} className="top-left">
-
-              <Box display={"flex"} mx={0}>
-                <MoreVertIcon fontSize='small' sx={{ margin: 'auto' }} />
+              </Tooltip> */}
               </Box>
 
-              <NodeBlock />
+              <Box display={'flex'} mr={1}>
 
-              <Box display={"flex"} mx={0}>
-                <MoreVertIcon fontSize='small' sx={{ margin: 'auto' }} />
+                <Box display={"flex"} mx={1}>
+                  <MoreVertIcon fontSize='inherit' sx={{ margin: 'auto' }} />
+                </Box>
+
+                <NodeBlock />
+
+                <Box display={"flex"} mx={1}>
+                  <MoreVertIcon fontSize='inherit' sx={{ margin: 'auto' }} />
+                </Box>
+
+                <ClusterSelect />
+
               </Box>
-
-              <ClusterSelect />
-
             </Grid>
 
             <Grid item xs={4} textAlign="center" margin={"auto"}>
