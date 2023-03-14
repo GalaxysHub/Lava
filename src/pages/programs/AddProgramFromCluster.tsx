@@ -13,9 +13,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { formatBytes } from "../../utils/helper";
 import { AppContext } from "../../context/main";
 import { AccountInfo, Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { Idl, Provider } from '@project-serum/anchor';
-import { idlAddress } from '@project-serum/anchor/dist/cjs/idl';
-
+import { Idl } from '@project-serum/anchor';
 import { decodeIdlAccount } from '@project-serum/anchor/dist/cjs/idl';
 import { utf8 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import { inflate } from "pako";
