@@ -34,17 +34,17 @@ export default function StartPage() {
           <QuickStart />
         </Box>
 
-        <Box mt={4}>
+        <Box mt={4} sx={{fontSize:'0.8rem'}}>
           <FormControl>
-            <FormLabel id="row-radio-buttons-group-label">Validator Node Type:</FormLabel>
+            <FormLabel id="row-radio-buttons-group-label" sx={{fontSize:'0.8rem'}}>VALIDATOR NODE TYPE:</FormLabel>
             <RadioGroup
               row
               defaultValue="lava"
               aria-labelledby="row-radio-buttons-group-label"
               name="row-radio-buttons-group"
             >
-              <FormControlLabel value="lava" control={<Radio size="small"/>} label="Lava Embeded" />
-              <FormControlLabel value="solana" control={<Radio size="small"/>} label="Solana CLI" />
+              <FormControlLabel value="lava" control={<Radio size="small"/>} label="LAVA EMBEDED" />
+              <FormControlLabel value="solana" control={<Radio size="small"/>} label="SOLANA CLI"/>
             </RadioGroup>
           </FormControl>
         </Box>
