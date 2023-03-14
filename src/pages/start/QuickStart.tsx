@@ -19,7 +19,7 @@ export default function QuickStart() {
     setStart(true);
 
     const validator = new Validator();
-    const workspace = new Workspace(validator, []);
+    const workspace = new Workspace(validator, {});
     workspace.initialAirdrop();
 
     setWorkspace(workspace);
