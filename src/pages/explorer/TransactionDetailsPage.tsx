@@ -8,7 +8,9 @@ import JsonView from "../../components/helpers/JsonView";
 import { AppContext } from "../../context/main";
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import CancelIcon from '@mui/icons-material/Cancel';
+import CircleIcon from '@mui/icons-material/Circle';
 import { minimizeStr, timeConverter, timeSince } from "../../utils/helper";
+import { useAlias } from "../../utils/hooks";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -52,7 +54,7 @@ export default function TransactionDetailsPage() {
           <Box><Chip variant='outlined' label={`#${index + 1}`} size="small" color='primary' /></Box>
           <Box>
             <Box sx={{ textAlign: 'right', textTransform: 'uppercase' }} color={theme.palette.primary.main}>
-              Unknown account
+              {useAlias(account.pubkey.toString())}
             </Box>
             <Box>
               <CopyToClipboard textToCopy={account.pubkey.toBase58()} notification='snackbar' />
@@ -98,7 +100,7 @@ export default function TransactionDetailsPage() {
           <Box><Chip variant='outlined' label={`#${index + 1}`} size="small" color='primary' /></Box>
           <Box>
             <Box sx={{ textAlign: 'right', textTransform: 'uppercase' }} color={theme.palette.primary.main}>
-              UNKNOWN PROGRAM
+              {useAlias(instruction.programId.toString())}
             </Box>
             <Box>
               <CopyToClipboard textToCopy={instruction.programId.toBase58()} notification='snackbar' />
@@ -427,8 +429,8 @@ export default function TransactionDetailsPage() {
             <TabPanel value={value} index={2}>
               {tx &&
                 tx.meta?.logMessages?.map((item, index) => (
-                  <Box fontSize={'0.9rem'} color={theme.palette.secondary.main}>
-                    # {item}
+                  <Box my={1} ml={1} fontSize={'0.9rem'} color={theme.palette.primary.dark}>
+                    • {item}
                   </Box>
                 ))
               }
