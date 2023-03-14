@@ -11,7 +11,8 @@ export class Workspace {
   path?: string
   validator: Validator
   mint: web3.Keypair
-  accounts?: TAccount[]
+  accounts?: Record<string, TAccount>
+  mainWallet?: TAccount;
   cluster: TCluster;
   programs: Record<string, TProgram>
   expolorerSettings: TExplorerSettings
@@ -25,12 +26,14 @@ export class Workspace {
     this.created = new Date();
     this.validator = validator;
     this.cluster = { name: 'localnet', endpoint: validator.RpcUrl };
-    this.mint = Workspace.mint()
-    this.accounts = Workspace.generateAccounts(10);
+    this.mint = Workspace.mint();
+    this.accounts = {};
     this.programs = programs;
     this.expolorerSettings = Workspace.generateDefaultExplorerSettings();
     this.logSettings = Workspace.generateDefaultLogSettings();
     this.initialTxsSignatures = [];
+
+    this.generateAccounts(10);
   }
 
   static mint() {
@@ -39,11 +42,10 @@ export class Workspace {
 
   static generateID() {
     // TODO
-    return '';
+    return web3.Keypair.generate().publicKey.toString();
   }
 
-  static generateAccounts(count: number) {
-    let accounts: Array<TAccount> = []
+  generateAccounts(count: number) {
     for (let i = 0; i < count; i++) {
       // const mnemonic = bip39.generateMnemonic();
       // const seed = bip39.mnemonicToSeedSync(mnemonic);
@@ -52,18 +54,20 @@ export class Workspace {
       const mnemonic = '';
       const keypair = web3.Keypair.generate();
 
-      accounts.push(
-        {
-          index: i + 1,
-          alias: "",
-          mnemonic: mnemonic,
-          keypair: keypair,
-          balance: 0,
-          txsCount: 0
-        }
-      )
+      const newAccount: TAccount =
+      {
+        alias: `Workspace Account ${i+1}`,
+        mnemonic: mnemonic,
+        keypair: keypair,
+        main: i === 0,
+      }
+
+      if (i === 0) {
+        this.mainWallet = newAccount;
+      }
+
+      this.accounts![keypair.publicKey.toString()] = newAccount;
     }
-    return accounts
   }
 
   static generateDefaultLogFilter() {
@@ -85,18 +89,30 @@ export class Workspace {
   }
 
   initialAirdrop() {
-    if (this.accounts) {
+  
       const connection = new web3.Connection(this.RPC, "confirmed");
 
-      for (let i = 0; i < this.accounts.length; i++) {
-        connection.requestAirdrop(this.accounts[i].keypair.publicKey, web3.LAMPORTS_PER_SOL * 100)
+      Object.keys(this.accounts!).forEach(key => {
+        connection.requestAirdrop(this.accounts![key].keypair.publicKey, web3.LAMPORTS_PER_SOL * 100)
           .then(signature => {
             connection.confirmTransaction(signature);
             this.initialTxsSignatures.push(signature);
           })
-      }
-    }
+      })
+
   };
+
+  get countAccounts() {
+    return Object.keys(this.accounts!).length;
+  }
+
+  get accountsAsArray(): TAccount[] {
+    let accounts: TAccount[] = [];
+    Object.keys(this.accounts!).map((key, index) => {
+      accounts.push(this.accounts![key]);
+    })
+    return accounts;
+  }
 
   get RPC() {
     if (this.cluster.name === 'localnet') {
