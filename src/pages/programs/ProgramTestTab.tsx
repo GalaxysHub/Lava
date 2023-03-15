@@ -139,22 +139,22 @@ export default function ProgramTestTab(props: ProgramTestTabProps) {
             >
               {instruction?.args.map((argument, index) => (
 
-                  <Box my={1} sx={{ minWidth: '100%' }}>
-                    <FormControl size="small" fullWidth>
-                      {/* <InputLabel id={`argument-${index}label`}>{argument.name}</InputLabel> */}
-                      <TextField
-                        fullWidth
-                        size="small"
-                        id={`irg-input-${index}`}
-                        // value={argument.name}
-                        label={`${argument.name} (${argument.type.toString()})`}
-                        // onChange={(event) => handleChangeArgument}
-                        inputProps={{ sx:{fontSize:'0.9rem'}}}
-                      />
+                <Box my={1} sx={{ minWidth: '100%' }}>
+                  <FormControl size="small" fullWidth>
+                    {/* <InputLabel id={`argument-${index}label`}>{argument.name}</InputLabel> */}
+                    <TextField
+                      fullWidth
+                      size="small"
+                      id={`irg-input-${index}`}
+                      // value={argument.name}
+                      label={`${argument.name} (${argument.type.toString()})`}
+                      // onChange={(event) => handleChangeArgument}
+                      inputProps={{ sx: { fontSize: '0.9rem' } }}
+                    />
 
 
-                    </FormControl>
-                  </Box>
+                  </FormControl>
+                </Box>
               ))}
 
               {/* <Divider sx={{ my: '15px' }} /> */}
@@ -180,7 +180,13 @@ export default function ProgramTestTab(props: ProgramTestTabProps) {
                       </Select>
                     </FormControl>
                   </Box> */}
-                  <TestInstructionAccountItem instruction={instruction} account={account} index={index} programID={new PublicKey(program!)} />
+                  <TestInstructionAccountItem
+                  key={index}
+                    instruction={instruction}
+                    account={account}
+                    index={index}
+                    programID={new PublicKey(program!)}
+                  />
                 </Box>
               ))}
             </Box>
