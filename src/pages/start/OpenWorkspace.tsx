@@ -9,6 +9,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import NewWorkspaceLoader from "../../components/loader/NewWorkspaceLoader"
 import { Validator, Workspace } from "../../libs"
 
+
+const dummyData = [
+  {index: 1, created: '11/03/21 15:00 UTC'},
+  {index: 2, created: '12/03/21 12:10 UTC'},
+  {index: 3, created: '12/03/21 23:41 UTC'},
+  // {index: 4, created: '14/03/21 09:44 UTC'},
+]
+
 export default function OpenWorkspace() {
 
   const theme = useTheme();
@@ -61,7 +69,7 @@ export default function OpenWorkspace() {
         <DialogTitle sx={{ m: 0, p: 2 }}>
           <Typography
             sx={{
-              color: (theme) => theme.palette.secondary.dark,
+              color: (theme) => theme.palette.secondary.main,
             }}
           >
             Open Existing Workspace
@@ -89,7 +97,7 @@ export default function OpenWorkspace() {
                 component="nav"
                 aria-labelledby="nested-list-subheader"
               >
-                {data.map(item => (
+                {dummyData.map(item => (
                   <ListItem
                     secondaryAction={
                       <IconButton edge="end" aria-label="delete">
@@ -107,8 +115,8 @@ export default function OpenWorkspace() {
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
-                        primary="Workspace"
-                        secondary={'Created: 11/12/2023 15:00'}
+                        primary={`Workspace #${item.index}`}
+                        secondary={`created: ${item.created}`}
                       />
                     </ListItemButton>
                   </ListItem>
