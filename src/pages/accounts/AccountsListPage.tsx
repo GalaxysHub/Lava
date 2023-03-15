@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { ConfirmedSignatureInfo, Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import KeyIcon from '@mui/icons-material/Key';
+import CloseIcon from '@mui/icons-material/Close';
 import KeyItem from "./KeyItem";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import OpacityIcon from '@mui/icons-material/Opacity';
@@ -16,7 +17,9 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { QRCodeSVG } from 'qrcode.react';
 import { AppContext } from "../../context/main";
-import { Box, Dialog, DialogContent, IconButton, Skeleton, Stack, Tab, Tabs, Tooltip, useTheme } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, Divider, IconButton, Skeleton, Stack, Tab, Tabs, Tooltip, useTheme } from "@mui/material";
+import { minimizeStr } from "../../utils/helper";
+import { CopyToClipboard } from "../../components/helpers/CopyToClipBoard";
 
 
 export interface SimpleDialogProps {
@@ -38,11 +41,16 @@ export default function AccountListPage() {
 
   const { workspace, setWorkspace, setQuickSearch } = useContext(AppContext);
 
-  const [secret, setSecret] = useState<string>("")
+  const [secret, setSecret] = useState<[string, string, string]>()
+  const [qrcode, setQrcode] = useState<[string, string]>()
+
   const showPrivateData = (event: React.MouseEvent<HTMLButtonElement>, value: string) => {
     // console.log(value.secretKey)
     const secret = workspace?.accounts![value].keypair.secretKey.toString()!;
-    setSecret(secret);
+    const mnemonic = workspace?.accounts![value].mnemonic!;
+    if (secret && mnemonic) {
+      setSecret([workspace?.accounts![value].keypair.publicKey.toString()!, secret, mnemonic]);
+    }
     setDialogOpen(true);
   }
 
@@ -50,14 +58,13 @@ export default function AccountListPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleDialogClose = () => {
     setDialogOpen(false);
-    setQrcode("");
-    setSecret("");
+    setQrcode(undefined);
+    setSecret(undefined);
   };
 
-  const [qrcode, setQrcode] = useState<string>("")
   const handleQRClick = (event: React.MouseEvent<HTMLButtonElement>, value: string) => {
     // console.log(value.publicKey)
-    setQrcode(value);
+    setQrcode([workspace?.accounts![value].keypair.publicKey.toString()!, value]);
     setDialogOpen(true);
   };
 
@@ -111,40 +118,134 @@ export default function AccountListPage() {
     };
   }
 
-  const [balances, setBalances] = useState<Record<string, number>>({});
+  // const [balances, setBalances] = useState<Record<string, number>>({});
+
+  const [balances, setBalances] = useState<number[]>([]);
+  const [transactions, setTransactions] = useState<number[]>([]);
+
+  // const updateAccounts = () => {
+  //   if (workspace?.accounts) {
+
+  //     const connection = new Connection(workspace.RPC, "confirmed");
+
+
+  //     Object.keys(workspace.accounts).forEach(key => {
+  //       connection.getBalance(workspace.accounts![key].keypair.publicKey)
+  //         .then(balance => {
+  //           // console.log(workspace.accounts![key].keypair.publicKey, balance)
+  //           // let newBalances: Record<string, number> = { ...balances };
+  //           // newBalances[key] = balance;
+  //           // console.log(newBalances)
+  //           // setBalances(newBalances);
+  //           setBalances(oldBalances => {
+  //             oldBalances[key] = balance;
+  //             console.log('old:', oldBalances)
+  //             return oldBalances;
+  //           })
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         })
+  //     })
+
+  //   }
+  // }
+
+
+  const updateAccount = (accountIndex: number) => {
+    if (workspace?.accounts) {
+
+      const connection = new Connection(workspace.RPC, "confirmed");
+
+      connection.getBalance(workspace.accountsAsArray[accountIndex].keypair.publicKey)
+        .then(balance => {
+          let newBalances = [...balances];
+          newBalances[accountIndex] = balance;
+          setBalances(newBalances);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
+  }
 
   const updateAccounts = () => {
     if (workspace?.accounts) {
 
       const connection = new Connection(workspace.RPC, "confirmed");
 
+      const balancePromises: Promise<number>[] = [];
 
-      Object.keys(workspace.accounts).forEach(key => {
-        connection.getBalance(workspace.accounts![key].keypair.publicKey)
-          .then(balance => {
-            // console.log(workspace.accounts![key].keypair.publicKey, balance)
-            // let newBalances: Record<string, number> = { ...balances };
-            // newBalances[key] = balance;
-            // console.log(newBalances)
-            // setBalances(newBalances);
-            setBalances(oldBalances => {
-              oldBalances[key] = balance;
-              console.log('old:', oldBalances)
-              return oldBalances;
-            })
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-      })
+      for (let i = 0; i < workspace.accountsAsArray.length; i++) {
+        const balance = connection.getBalance(workspace.accountsAsArray[i].keypair.publicKey);
+        balancePromises.push(balance);
+      }
 
+      Promise.all(balancePromises)
+        .then(responses => {
+          setBalances(responses);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+
+
+      // const txsPromises: Promise<ConfirmedSignatureInfo[]>[] = [];
+
+      // for (let i = 0; i < workspace.accountsAsArray.length; i++) {
+      //   const txRequest = connection.getSignaturesForAddress(workspace.accountsAsArray[i].keypair.publicKey);
+      //   txsPromises.push(txRequest);
+      // }
+
+      // Promise.all(txsPromises)
+      //   .then(responses => {
+      //     // setTransactions(responses);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   })
     }
   }
 
   useEffect(() => {
     // console.log('balances: ', balances);
-    updateAccounts();
+
+
+    const accounts = workspace?.accountsAsArray;
+
+    let clients: number[] = [];
+
+    if (accounts && accounts?.length! > 0 && workspace?.RPC !== undefined) {
+
+      const connection = new Connection(workspace.RPC, "confirmed");
+
+      for (let i = 0; i < accounts?.length; i++) {
+        clients.push(
+          connection.onAccountChange(accounts[i].keypair.publicKey, account => {
+            let newBalances = [...balances];
+            newBalances[i] = account.lamports;
+            setBalances(newBalances);
+          }))
+      }
+
+      return () => {
+        for (let i = 0; i < clients?.length; i++) {
+          connection.removeAccountChangeListener(clients[i]);
+        }
+      }
+    }
+
   }, []);
+
+  useEffect(() => {
+    if (balances.length === 0) {
+      updateAccounts();
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('balances: ', balances);
+  }, [balances]);
 
   return (
     <>
@@ -177,8 +278,11 @@ export default function AccountListPage() {
                         <KeyItem index={index} pubkeyStr={key} />
                       </TableCell>
 
-                      <TableCell align="center">
-                        {balances[key] ? `${balances[key] / LAMPORTS_PER_SOL} SOL` : <Skeleton height={30} />}
+                      <TableCell align="right">
+                        {/* {balances[key] ? `${balances[key] / LAMPORTS_PER_SOL} SOL` : <Skeleton height={30} />} */}
+                        <Box minWidth={'50px'}>
+                          {balances[index] ? `${(balances[index] / LAMPORTS_PER_SOL).toFixed(4)} SOL` : <Skeleton height={30} />}
+                        </Box>
                       </TableCell>
 
                       <TableCell align="center">
@@ -256,9 +360,116 @@ export default function AccountListPage() {
         onClose={handleDialogClose}
         aria-labelledby="responsive-dialog-title"
       >
+        <DialogTitle sx={{ m: 0, p: 2 }}>
+          <IconButton
+            aria-label="close"
+            onClick={handleDialogClose}
+            size='small'
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.secondary.dark,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
         <DialogContent >
-          {qrcode && <QRCodeSVG size={256} value={qrcode} />}
-          {secret && <Box sx={{ wordWrap: "break-word" }}>{secret}</Box>}
+          {qrcode &&
+            <>
+              <Box>
+                <Box
+                  my={2}
+                  display={'flex'}
+                  justifyContent={'space-between'}
+                >
+                  <Box
+                    textTransform={'uppercase'}
+                    fontSize={'0.9rem'}
+                  >
+                    Account:
+                  </Box>
+                  <Box
+                    color={theme.palette.primary.main}
+                    fontSize={'0.9rem'}>
+                    <CopyToClipboard textToCopy={qrcode[0]} notification='snackbar' />
+                    {minimizeStr(qrcode[0])}
+                  </Box>
+                </Box>
+              </Box>
+
+              <Box>
+                <QRCodeSVG
+                  size={256}
+                  value={qrcode[1]}
+                  bgColor={"transparent"}
+                  fgColor={theme.palette.primary.main}
+                // includeMargin
+                />
+              </Box>
+            </>
+          }
+          {secret &&
+            <Box
+              sx={{ wordWrap: "break-word" }}
+            >
+              <Box
+                my={2}
+                display={'flex'}
+                justifyContent={'space-between'}
+              >
+                <Box
+                  textTransform={'uppercase'}
+                  fontSize={'0.9rem'}
+                >
+                  Account:
+                </Box>
+                <Box
+                  color={theme.palette.primary.main}
+                  fontSize={'0.9rem'}>
+                  {secret[0]}
+                </Box>
+              </Box>
+
+              <Box mt={2}>
+                <Box
+                  mb={1}
+                  color={theme.palette.primary.main}
+                  textTransform={'uppercase'}
+                  fontSize={'0.8rem'}
+                >
+                  Mnemonic phrase:
+                </Box>
+                <Box
+                  color={theme.palette.secondary.main}
+                  fontSize={'0.9rem'}
+                >
+                  {secret[2]} <CopyToClipboard textToCopy={secret[2]} notification='snackbar' />
+                </Box>
+              </Box>
+
+              <Divider sx={{ my: 2 }} />
+
+              <Box my={2}>
+                <Box
+                  mb={1}
+                  color={theme.palette.primary.main}
+                  textTransform={'uppercase'}
+                  fontSize={'0.8rem'}
+                >
+                  Private Key data:
+                </Box>
+                <Box
+                  color={theme.palette.secondary.main}
+                  fontSize={'0.9rem'}
+                >
+                  {secret[1]}
+                </Box>
+              </Box>
+            </Box>
+          }
         </DialogContent>
 
       </Dialog>
