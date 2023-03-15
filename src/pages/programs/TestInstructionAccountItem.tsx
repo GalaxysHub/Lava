@@ -13,6 +13,7 @@ import { Buffer } from "buffer";
 import { IdlAccountItem, IdlInstruction } from "@project-serum/anchor/dist/cjs/idl";
 import { TAccount } from "../../libs/types";
 import { Workspace } from "../../libs";
+import { SelectChangeEvent } from '@mui/material/Select';
 
 interface InstructionAccount {
   instruction: IdlInstruction;
@@ -23,7 +24,7 @@ interface InstructionAccount {
 
 
 interface TestInstructionArgument {
-  
+
 }
 
 interface TestInstructionAccount {
@@ -54,7 +55,7 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
   const [open, setOpen] = React.useState(false);
   const [pdaOpen, setPdaOpen] = React.useState(false);
 
-  const [selectedAccount, setSelectedAccount] = React.useState<PublicKey | [PublicKey, number] | null>(null);
+  const [selectedAccount, setSelectedAccount] = React.useState<PublicKey | [PublicKey, number]>();
 
   const generateHandler = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, alias: string) => {
     if (workspace?.accounts!) {
@@ -62,7 +63,7 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
       const account = Keypair.generate();
       setSelectedAccount(account.publicKey);
       //TODO - add account to workspace
-      // let newWorkspace = Object.assign(Object.create(Object.getPrototypeOf(workspace)), workspace);
+      let newWorkspace = Object.assign(Object.create(Object.getPrototypeOf(workspace)), workspace);
 
       // let newWorkspaceAccountRelations:TAcoountProgramRelation[] = [];
       // newWorkspaceAccountRelations.push({
@@ -70,20 +71,21 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
       //   accountIndex: index,
       // })
 
-      // let newWorkspaceAccount: TAccount = {
-      //   alias: alias,
-      //   mnemonic: '',
-      //   keypair: account,
-      //   relations: {},
-      //   main: false,
-      // }
+      const newWorkspaceAccount: TAccount = {
+        alias: alias,
+        mnemonic: '',
+        keypair: account,
+        // relations: {},
+        main: false,
+      }
+
+      newWorkspace.accounts[account.publicKey.toString()] = newWorkspaceAccount;
 
       // newWorkspaceAccount.relations![account.publicKey.toString()] = newWorkspaceAccountRelations;
 
       // newWorkspace.accounts[programID.toString()] = newWorkspaceAccount;
-      // setWorkspace(newWorkspace);
-
-
+      setWorkspace(newWorkspace);
+      console.log(workspace);
     }
   }
 
@@ -99,6 +101,14 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
   const selectExistingHandler = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, alias: string) => {
     event.preventDefault();
     setOpen(true);
+  }
+
+  const handlerSelectAccount = (event: SelectChangeEvent) => {
+    event.preventDefault();
+    const pubkeyStr = event.target.value;
+    const account = workspace?.accounts![pubkeyStr]!;
+    console.log(pubkeyStr);
+    setSelectedAccount(account.keypair.publicKey)
   }
 
   // Dialog
@@ -156,8 +166,8 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
     console.log(programID);
     const pdaSeeds = seeds.map(item => Buffer.from(item, 'utf-8'));
     const [pdaPubkey, pdaBump] = PublicKey.findProgramAddressSync(pdaSeeds, programID);
-    // const pda = PublicKey.findProgramAddressSync(pdaSeeds, programID);
-    // console.log(pda);
+    const pda = PublicKey.findProgramAddressSync(pdaSeeds, programID);
+    console.log(pda);
     // Add new program to Workspace object
     let newWorkspace = Object.assign(Object.create(Object.getPrototypeOf(workspace)), workspace);
     newWorkspace.programs[programID.toString()].pdas[pdaPubkey.toString()] = [pdaPubkey, pdaBump];
@@ -165,13 +175,15 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
     console.log(workspace);
 
     // const x = workspace?.programs[programID.toString()].tests?.at(0)?.instructions.at(0)?.accounts.at(0);
+
+    setSelectedAccount([pdaPubkey, pdaBump]);
   }
 
-  const [testInstruction, seTestInstruction] = React.useState<TestInstruction>();
+  // const [testInstruction, seTestInstruction] = React.useState<TestInstruction>();
 
   // useEffect(() => {
-  //   console.log(workspace);
-  //   console.log(selectedAccount);
+  //   // console.log(workspace);
+  //   console.log('selectedAccount: ', selectedAccount);
   // }, [selectedAccount]);
 
   return (
@@ -195,35 +207,47 @@ export default function TestInstructionAccountItem(props: InstructionAccount) {
               </InputLabel>
               <Select
                 fullWidth
+                displayEmpty
+                // defaultValue={selectedAccount?.toString()}
                 labelId={`select-label-${index}`}
                 id={`select-${index}`}
-                // value={selectedAccount}
+                // value={selectedAccount?.toString()}
                 label={account.name}
-                // onChange={handleChangeInstruction}
+                // onChange={(event) => setSelectedAccount(event.target.value)}
+                // onChange={(event) => handlerSelectAccount(event)}
                 sx={{
+                  color: `${theme.palette.primary.main}`,
                   fontSize: '0.85rem',
-                  color: `${theme.palette.primary.main}`
+                  // maxWidth: '400px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
                 }}
               >
                 {workspace?.accountsAsArray.map((item, index) => (
                   <MenuItem
-                    sx={{ fontSize: '0.8rem' }}
-                    // value={selectedAccount.toString()}
-                    divider
+                    key={item.alias}
+                    value={item.keypair.publicKey.toString()}
+                    sx={{ maxWidth: '400px', fontSize: '0.8rem' }}
                   >
-                    <PersonIcon
-                      fontSize="inherit"
-                      color="secondary"
-                      sx={{ mb: '-2px' }} />
-                    {item.keypair.publicKey.toString()}
+                    <Box
+                      color={theme.palette.primary.main}
+                      display={'contents'}
+                    >
+                      {item.alias}&nbsp;
+                    </Box>
+                    <Box
+                      color={theme.palette.secondary.main}
+                      sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                      display={'initial'}
+                    >
+                      {item.keypair.publicKey.toString()}
+                    </Box>
                   </MenuItem>
-                ))
-
-                }
+                ))}
               </Select>
             </Box>
             <Box>
-              <Tooltip title={'Airgrop'}>
+              <Tooltip title={'Actions'}>
                 <IconButton
                   sx={{ mt: 2, mr: -1 }}
                   size="small"
