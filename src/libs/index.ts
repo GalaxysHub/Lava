@@ -47,12 +47,9 @@ export class Workspace {
 
   generateAccounts(count: number) {
     for (let i = 0; i < count; i++) {
-      // const mnemonic = bip39.generateMnemonic();
-      // const seed = bip39.mnemonicToSeedSync(mnemonic);
-      // const keypair = web3.Keypair.fromSeed(seed.slice(0, 32));
-
-      const mnemonic = '';
-      const keypair = web3.Keypair.generate();
+      const mnemonic = bip39.generateMnemonic();
+      const seed = bip39.mnemonicToSeedSync(mnemonic);
+      const keypair = web3.Keypair.fromSeed(seed.slice(0, 32));
 
       const newAccount: TAccount =
       {
