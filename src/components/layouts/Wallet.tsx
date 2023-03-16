@@ -7,10 +7,9 @@ import { AppContext } from "../../context/main";
 import { TAccount } from "../../libs/types";
 import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram, sendAndConfirmTransaction, Signer } from "@solana/web3.js";
 import OpacityIcon from '@mui/icons-material/Opacity';
-
+import { NavLink } from "react-router-dom";
 // fixes the "Buffer is not defined" error
 import * as buffer from "buffer";
-import { NavLink } from "react-router-dom";
 window.Buffer = buffer.Buffer;
 
 export default function Wallet() {
